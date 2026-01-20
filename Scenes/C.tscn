@@ -1,0 +1,98 @@
+[gd_scene load_steps=10 format=3 uid="uid://cqpgd6o3vm04a"]
+
+[ext_resource type="Script" uid="uid://bo7dai4h7f30p" path="res://Scripts/base.gd" id="1_ejacw"]
+[ext_resource type="Texture2D" uid="uid://dd1p3s4q5ybu7" path="res://Sprites/arrow_mid.png" id="2_0jrky"]
+[ext_resource type="Script" uid="uid://dmrt848cht28t" path="res://Scripts/arrow_path.gd" id="3_u831h"]
+[ext_resource type="Texture2D" uid="uid://cl314h5j4hpvb" path="res://Sprites/arrow_head.png" id="4_vd1mu"]
+[ext_resource type="Script" uid="uid://gfqkn5246f42" path="res://Scripts/road.gd" id="7_nmeif"]
+[ext_resource type="PackedScene" uid="uid://cqt0ynowkv4o" path="res://Prefabs/barricade.tscn" id="8_v6eye"]
+[ext_resource type="Script" uid="uid://1kvaiy2cicn7" path="res://Scripts/barricade.gd" id="9_p5x77"]
+
+[sub_resource type="Curve2D" id="Curve2D_gmk6s"]
+
+[sub_resource type="Curve2D" id="Curve2D_ejacw"]
+bake_interval = 50.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 1325, 72.5979, 0, 0, 0, 0, 1347, 442.5979, 10, -552, -10, 552, 491, 680.5979, 0, 0, 0, 0, 1385, 918.5979, 0, 0, 0, 0, 1401, 1320.5979)
+}
+point_count = 5
+
+[node name="C" type="Node2D"]
+script = ExtResource("1_ejacw")
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.89275575, 0.89275575, 0.8927557, 1)
+
+[node name="Arrow" type="Line2D" parent="."]
+z_index = -1
+points = PackedVector2Array(-126, -110, 93, -110)
+width = 128.0
+texture = ExtResource("2_0jrky")
+texture_mode = 1
+joint_mode = 2
+
+[node name="Path2D" type="Path2D" parent="Arrow"]
+curve = SubResource("Curve2D_gmk6s")
+script = ExtResource("3_u831h")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Arrow/Path2D"]
+position = Vector2(-111, -61)
+rotation = -0.15146263
+
+[node name="Arrow_Head" type="Sprite2D" parent="Arrow"]
+z_index = -1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_vd1mu")
+offset = Vector2(75, 0)
+
+[node name="Terrain" type="Node2D" parent="."]
+z_index = -3
+position = Vector2(995, 634)
+
+[node name="Road" type="Line2D" parent="Terrain"]
+position = Vector2(-966, -727.5979)
+points = PackedVector2Array(1325, 72.5979, 1325.9453, 88.49634, 1328.4375, 130.4104, 1330.1025, 158.41333, 1331.9609, 189.66821, 1333.9482, 223.09105, 1336, 257.5979, 1338.0518, 292.10474, 1340.0391, 325.5276, 1341.8975, 356.78247, 1343.5625, 384.7854, 1346.0547, 426.69946, 1347, 442.5979, 1310.6289, 430.18384, 1268.8608, 417.25903, 1243.1592, 409.87338, 1214.6563, 402.1604, 1183.6602, 394.33606, 1150.479, 386.61646, 1115.4207, 379.21768, 1078.793, 372.3557, 1040.904, 366.2467, 1002.062, 361.1067, 962.5747, 357.15173, 922.75, 354.5979, 882.8961, 353.66125, 843.3208, 354.55786, 804.33215, 357.50378, 766.2383, 362.7151, 729.34705, 370.40784, 693.9663, 380.7981, 660.40424, 394.10193, 628.96875, 410.5354, 599.96783, 430.31458, 573.7095, 453.65552, 550.50165, 480.7743, 530.65234, 511.88696, 514.46954, 547.2096, 502.26123, 586.95825, 494.3354, 631.349, 491, 680.5979, 492.68475, 729.8468, 499.3921, 774.23755, 510.78912, 813.9862, 526.54297, 849.30884, 546.3207, 880.42145, 569.78955, 907.54034, 596.6166, 930.8812, 626.46875, 950.66034, 659.0133, 967.0939, 693.9175, 980.3977, 730.84827, 990.788, 769.47266, 998.48065, 809.4579, 1003.692, 850.4712, 1006.63794, 892.17957, 1007.53455, 934.25, 1006.5979, 976.34973, 1004.04407, 1018.146, 1000.0891, 1059.3058, 994.9491, 1099.4961, 988.8401, 1138.3842, 981.97815, 1175.6372, 974.5793, 1210.9222, 966.85974, 1243.9063, 959.0354, 1274.2565, 951.3224, 1301.6401, 943.93677, 1346.1758, 931.01196, 1385, 918.5979, 1385.6875, 935.8714, 1387.5, 981.41034, 1388.7109, 1011.8352, 1390.0625, 1045.7931, 1391.5078, 1082.1067, 1393, 1119.5979, 1394.4922, 1157.0891, 1395.9375, 1193.4026, 1397.2891, 1227.3606, 1398.5, 1257.7854, 1400.3125, 1303.3245, 1401, 1320.5979)
+width = 150.0
+default_color = Color(0.256, 0.3376, 0.4, 1)
+script = ExtResource("7_nmeif")
+
+[node name="Path2D" type="Path2D" parent="Terrain/Road"]
+position = Vector2(-2, -46)
+curve = SubResource("Curve2D_ejacw")
+
+[node name="Barricade_Start" parent="Terrain" instance=ExtResource("8_v6eye")]
+position = Vector2(175.99997, -532)
+script = ExtResource("9_p5x77")
+
+[node name="Barricade_End" parent="Terrain" instance=ExtResource("8_v6eye")]
+position = Vector2(439.99997, 31.000004)
+scale = Vector2(-0.4, 0.4)
+script = ExtResource("9_p5x77")
+_type = 1
+
+[node name="Node2D" type="Node2D" parent="Terrain/Barricade_End"]
+position = Vector2(-32.49994, 855)
+
+[node name="Crash_Zone" type="Area2D" parent="Terrain"]
+position = Vector2(-995, -634)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
+polygon = PackedVector2Array(1442, -21, 1478, 361, 1360, 449, 1126, 387, 892, 361, 704, 407, 638, 495, 638, 669, 704, 761, 846, 809, 1070, 797, 1332, 743, 1392, 719, 1518, 815, 1532, 1121, 1956, 1115, 1960, -27)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
+polygon = PackedVector2Array(1256, -41, 1268, 209, 1058, 159, 776, 161, 584, 229, 446, 379, 400, 639, 462, 839, 586, 951, 856, 1017, 1058, 1013, 1320, 959, 1326, 1119, -24, 1127, -28, -37)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(958, 540)
+
+[node name="Start_Point" type="Node2D" parent="."]
+position = Vector2(1371, 325)

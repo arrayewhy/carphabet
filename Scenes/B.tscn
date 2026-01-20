@@ -1,0 +1,122 @@
+[gd_scene load_steps=11 format=3 uid="uid://cxxtn6jqam8n8"]
+
+[ext_resource type="Script" uid="uid://bo7dai4h7f30p" path="res://Scripts/base.gd" id="1_jyqhj"]
+[ext_resource type="Texture2D" uid="uid://dd1p3s4q5ybu7" path="res://Sprites/arrow_mid.png" id="2_q8hsb"]
+[ext_resource type="Script" uid="uid://dmrt848cht28t" path="res://Scripts/arrow_path.gd" id="3_rbpao"]
+[ext_resource type="Texture2D" uid="uid://cl314h5j4hpvb" path="res://Sprites/arrow_head.png" id="4_rk5fr"]
+[ext_resource type="Script" uid="uid://gfqkn5246f42" path="res://Scripts/road.gd" id="7_kj447"]
+[ext_resource type="PackedScene" uid="uid://cqt0ynowkv4o" path="res://Prefabs/barricade.tscn" id="8_k327m"]
+[ext_resource type="Script" uid="uid://1kvaiy2cicn7" path="res://Scripts/barricade.gd" id="9_haolw"]
+
+[sub_resource type="Curve2D" id="Curve2D_gmk6s"]
+
+[sub_resource type="Curve2D" id="Curve2D_r84gx"]
+bake_interval = 50.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 412, -223, -43.483776, -152.19322, 43.483776, 152.19322, 605, -95, 0, 0, 0, 0, 569, 1119.5979)
+}
+point_count = 3
+
+[sub_resource type="Curve2D" id="Curve2D_w5x4y"]
+bake_interval = 50.0
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 740, 251.5979, -4.7076435, -208.70554, 4.7076435, 208.70554, 1251, 386, 0, 0, 0, 0, 716, 631.5979, -6.2768574, -240.08983, 6.2768574, 240.08983, 1304, 819, 0, 0, 0, 0, 746, 1012, 0, 0, 0, 0, 742, 1353)
+}
+point_count = 6
+
+[node name="B" type="Node2D"]
+script = ExtResource("1_jyqhj")
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.89275575, 0.89275575, 0.8927557, 1)
+
+[node name="Arrow" type="Line2D" parent="."]
+z_index = -1
+points = PackedVector2Array(-126, -110, 93, -110)
+width = 128.0
+texture = ExtResource("2_q8hsb")
+texture_mode = 1
+joint_mode = 2
+
+[node name="Path2D" type="Path2D" parent="Arrow"]
+curve = SubResource("Curve2D_gmk6s")
+script = ExtResource("3_rbpao")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Arrow/Path2D"]
+position = Vector2(-111, -61)
+rotation = -0.15146263
+
+[node name="Arrow_Head" type="Sprite2D" parent="Arrow"]
+z_index = -1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_rk5fr")
+offset = Vector2(75, 0)
+
+[node name="Terrain" type="Node2D" parent="."]
+z_index = -3
+position = Vector2(995, 634)
+
+[node name="Road" type="Line2D" parent="Terrain"]
+position = Vector2(-966, -727.5979)
+points = PackedVector2Array(412, -223, 436.04135, -224.40218, 461.60095, -222.62906, 492.1936, -216.07245, 524.8245, -202.38179, 556.499, -179.20651, 584.2224, -144.1961, 595.6666, -121.51817, 605, -95, 611.7616, -56.278824, 614.1544, -29.821325, 615.93774, 0.8858533, 617.1488, 35.481518, 617.82495, 73.60447, 618.0029, 114.89349, 617.7197, 158.98743, 617.0127, 205.52507, 615.9187, 254.1452, 615.2382, 279.12332, 614.475, 304.48663, 613.6335, 330.18994, 612.71844, 356.1881, 611.73456, 382.43607, 610.6863, 408.88855, 609.5784, 435.50055, 608.4155, 462.22675, 607.2023, 489.0221, 605.94324, 515.84143, 604.64307, 542.6396, 603.3064, 569.3714, 601.938, 595.99176, 600.54224, 622.4555, 599.12396, 648.7175, 597.68774, 674.73254, 596.2382, 700.45557, 594.78, 725.8413, 591.8561, 775.4206, 588.953, 823.10925, 586.1079, 868.5459, 583.3579, 911.3697, 580.73987, 951.2191, 578.29114, 987.73315, 576.0485, 1020.5505, 574.04926, 1049.31, 572.3304, 1073.6505, 569, 1119.5979)
+width = 150.0
+default_color = Color(0.256, 0.3376, 0.4, 1)
+script = ExtResource("7_kj447")
+
+[node name="Path2D" type="Path2D" parent="Terrain/Road"]
+position = Vector2(-2, -46)
+curve = SubResource("Curve2D_r84gx")
+
+[node name="Road2" type="Line2D" parent="Terrain"]
+position = Vector2(-946, -735.5979)
+points = PackedVector2Array(740, 251.5979, 761.7639, 248.8128, 786.7543, 246.11655, 819.18176, 243.24902, 857.5699, 240.73363, 900.4423, 239.09378, 946.3227, 238.85289, 993.7346, 240.53438, 1041.2018, 244.6616, 1087.2476, 251.75804, 1130.3959, 262.34705, 1169.1702, 276.95203, 1202.0941, 296.0964, 1227.6914, 320.3036, 1244.4855, 350.097, 1251, 386, 1245.7675, 423.1518, 1229.3633, 456.47437, 1203.3755, 486.1653, 1169.3923, 512.42236, 1129.0016, 535.44305, 1083.7915, 555.42505, 1059.8754, 564.33826, 1035.3501, 572.566, 1010.4138, 580.1328, 985.2654, 587.06354, 960.103, 593.3828, 935.12555, 599.11536, 886.5186, 608.91895, 841.03265, 616.6721, 800.25574, 622.5724, 765.776, 626.8175, 739.1814, 629.60504, 716, 631.5979, 741.0082, 629.8029, 769.72577, 628.31824, 806.9923, 627.1168, 851.1127, 626.70483, 900.39185, 627.58813, 926.4363, 628.6737, 953.13464, 630.27295, 980.27527, 632.4491, 1007.6462, 635.26526, 1035.0354, 638.7849, 1062.2312, 643.0711, 1089.0216, 648.18726, 1115.1947, 654.19653, 1140.5387, 661.16235, 1164.8417, 669.1477, 1209.4769, 688.43054, 1247.4055, 712.5511, 1276.9323, 742.0155, 1296.362, 777.3298, 1304, 819, 1298.7678, 860.73303, 1281.8256, 896.225, 1254.8357, 925.9655, 1219.4606, 950.44415, 1177.3624, 970.15063, 1130.2037, 985.5746, 1105.2461, 991.83374, 1079.6467, 997.2058, 1053.6133, 1001.7521, 1027.3538, 1005.5337, 1001.0759, 1008.61194, 974.9874, 1011.0481, 949.2961, 1012.9032, 924.2097, 1014.2385, 876.6832, 1015.5947, 834.0702, 1015.6064, 798.033, 1014.76306, 770.234, 1013.55444, 746, 1012, 745.8281, 1026.6523, 745.375, 1065.2813, 745.07227, 1091.0894, 744.7344, 1119.8945, 744.37305, 1150.6978, 744, 1182.5, 743.62695, 1214.3022, 743.2656, 1245.1055, 742.92773, 1273.9106, 742.625, 1299.7188, 742.1719, 1338.3477, 742, 1353)
+width = 150.0
+default_color = Color(0.256, 0.3376, 0.4, 1)
+script = ExtResource("7_kj447")
+
+[node name="Path2D" type="Path2D" parent="Terrain/Road2"]
+position = Vector2(-2, -46)
+curve = SubResource("Curve2D_w5x4y")
+
+[node name="Barricade_Start" parent="Terrain" instance=ExtResource("8_k327m")]
+position = Vector2(149.99997, -656)
+script = ExtResource("9_haolw")
+
+[node name="Barricade_End" parent="Terrain" instance=ExtResource("8_k327m")]
+position = Vector2(-92.99999, 87)
+script = ExtResource("9_haolw")
+_type = 1
+
+[node name="Node2D" type="Node2D" parent="Terrain/Barricade_End"]
+position = Vector2(-237.50006, 517.5)
+
+[node name="Crash_Zone" type="Area2D" parent="Terrain"]
+position = Vector2(-995, -634)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
+polygon = PackedVector2Array(741, -22, 733, 147, 782, 148, 813, 106, 853, 82, 934, 65, 1083, 56, 1178, 64, 1310, 107, 1372, 187, 1395, 285, 1369, 398, 1321, 446, 1277, 480, 1339, 519, 1410, 595, 1443, 674, 1441, 772, 1394, 865, 1322, 921, 1221, 965, 1067, 995, 968, 999, 885, 1002, 883, 1107, 1947, 1111, 1943, -21)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
+polygon = PackedVector2Array(732, 162, 704, 485, 741, 486, 757, 444, 792, 410, 863, 400, 995, 390, 1104, 364, 1186, 324, 1207, 294, 1200, 263, 1143, 241, 1040, 235, 948, 246, 837, 257, 806, 226, 786, 176, 783, 160)
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
+polygon = PackedVector2Array(703, 496, 656, 965, 705, 969, 706, 909, 724, 858, 765, 826, 820, 818, 913, 820, 1012, 816, 1104, 805, 1167, 789, 1235, 760, 1258, 714, 1224, 661, 1135, 623, 1044, 599, 910, 588, 841, 585, 789, 585, 744, 534, 738, 497)
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
+polygon = PackedVector2Array(657, 979, 704, 983, 704, 1114, -47, 1116, -36, -34, 538, -26, 539, 102, 519, 424, 491, 735, 472, 959, 490, 1017, 519, 1041, 558, 1049, 609, 1041, 640, 1014)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(958, 540)
+zoom = Vector2(0.86, 0.86)
+
+[node name="Start_Point" type="Node2D" parent="."]
+position = Vector2(873, 138)

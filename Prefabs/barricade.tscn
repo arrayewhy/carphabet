@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://cqt0ynowkv4o"]
+
+[ext_resource type="Texture2D" uid="uid://bre33fefrvlsm" path="res://Sprites/barricade_spritesheet.png" id="1_22jsp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_40mo6"]
+atlas = ExtResource("1_22jsp")
+region = Rect2(0, 0, 600, 1300)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5yeus"]
+atlas = ExtResource("1_22jsp")
+region = Rect2(600, 0, 600, 1300)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gigo6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_40mo6")
+}],
+"loop": false,
+"name": &"Closed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5yeus")
+}],
+"loop": false,
+"name": &"Open",
+"speed": 5.0
+}]
+
+[node name="Barricade" type="AnimatedSprite2D"]
+scale = Vector2(0.4, 0.4)
+sprite_frames = SubResource("SpriteFrames_gigo6")
+animation = &"Open"
+autoplay = "Closed"
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+polygon = PackedVector2Array(-127.499985, -134.99998, 159.99998, 519.99994, 154.99998, 634.99994, 54.999996, 637.49994, -82.49999, 282.49997, -249.99997, 282.49997, -222.49998, -137.49998)
