@@ -17,7 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Global="*res://Scripts/Globals/global.gd"
+Globals="*res://Scripts/Globals/Globals.gd"
+AudioMaster="*res://Scripts/Globals/AudioMaster.gd"
 
 [display]
 

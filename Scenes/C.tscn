@@ -17,8 +17,9 @@ _data = {
 }
 point_count = 5
 
-[node name="C" type="Node2D"]
+[node name="Base" type="Node2D"]
 script = ExtResource("1_ejacw")
+_scene_type = 3
 
 [node name="Background" type="CanvasLayer" parent="."]
 layer = -1

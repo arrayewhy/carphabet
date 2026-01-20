@@ -24,8 +24,9 @@ _data = {
 }
 point_count = 2
 
-[node name="A" type="Node2D"]
+[node name="Base" type="Node2D"]
 script = ExtResource("1_wbjmg")
+_scene_type = 1
 
 [node name="Background" type="CanvasLayer" parent="."]
 layer = -1
@@ -95,6 +96,13 @@ script = ExtResource("6_2jc3y")
 
 [node name="Node2D" type="Node2D" parent="Terrain/Barricades_Start/Barricade"]
 position = Vector2(-647.49994, 467.49997)
+
+[node name="Barricade2" parent="Terrain/Barricades_Start" instance=ExtResource("5_vp0hx")]
+position = Vector2(-20.999998, -155.00003)
+script = ExtResource("6_2jc3y")
+
+[node name="Node2D" type="Node2D" parent="Terrain/Barricades_Start/Barricade2"]
+position = Vector2(-224.99997, 452.50012)
 
 [node name="Barricades_End" type="Node2D" parent="Terrain"]
 
