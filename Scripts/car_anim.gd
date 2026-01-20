@@ -28,19 +28,19 @@ func _process(_delta: float) -> void:
 func Animate(direction:Vector2) -> void:
 	
 	if abs(direction.x) < 0.3:
-		if direction.y < 0:
+		if direction.y < 0: # North
 			play("North");
 			if _debug: $"debug_label".text = "North" + str(direction);
-		elif direction.y > 0:
+		elif direction.y > 0: # South
 			play("South");
 			if _debug: $"debug_label".text = "South" + str(direction);
 		return;
 	
 	if abs(direction.y) < 0.3:
-		if direction.x < 0:
+		if direction.x < 0: # West
 			play("West");
 			if _debug: $"debug_label".text = "West" + str(direction);
-		elif direction.x > 0:
+		elif direction.x > 0: # East
 			play("East");
 			if _debug: $"debug_label".text = "East" + str(direction);
 		return;
