@@ -17,8 +17,6 @@ func _ready() -> void:
 	$Area2D.area_entered.connect(_Contact);
 	
 	$"..".Win.connect(_Move_To_EndPoint);
-	
-	print(_arrow_path);
 
 
 func _process(delta: float) -> void:

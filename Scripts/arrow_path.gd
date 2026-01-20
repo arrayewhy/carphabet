@@ -20,7 +20,7 @@ func _ready() -> void:
 	#_can_draw = true;
 	_arrow_head.hide();
 	
-	$"../../Terrain/Barricade_Start".Start_Barricade_Clicked.connect(_SIGNAL_Start_Drawing);
+	$"../../Terrain/Barricades_Start/Barricade".Start_Barricade_Clicked.connect(_SIGNAL_Start_Drawing);
 
 
 func _process(_delta: float) -> void:

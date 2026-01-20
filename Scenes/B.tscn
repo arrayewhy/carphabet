@@ -87,19 +87,8 @@ script = ExtResource("7_kj447")
 position = Vector2(-2, -46)
 curve = SubResource("Curve2D_w5x4y")
 
-[node name="Barricade_Start" parent="Terrain" instance=ExtResource("8_k327m")]
-position = Vector2(149.99997, -656)
-script = ExtResource("9_haolw")
-
-[node name="Barricade_End" parent="Terrain" instance=ExtResource("8_k327m")]
-position = Vector2(-92.99999, 87)
-script = ExtResource("9_haolw")
-_type = 1
-
-[node name="Node2D" type="Node2D" parent="Terrain/Barricade_End"]
-position = Vector2(-237.50006, 517.5)
-
 [node name="Crash_Zone" type="Area2D" parent="Terrain"]
+visible = false
 position = Vector2(-995, -634)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
@@ -114,9 +103,25 @@ polygon = PackedVector2Array(703, 496, 656, 965, 705, 969, 706, 909, 724, 858, 7
 [node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
 polygon = PackedVector2Array(657, 979, 704, 983, 704, 1114, -47, 1116, -36, -34, 538, -26, 539, 102, 519, 424, 491, 735, 472, 959, 490, 1017, 519, 1041, 558, 1049, 609, 1041, 640, 1014)
 
+[node name="Barricades_Start" type="Node2D" parent="Terrain"]
+
+[node name="Barricade" parent="Terrain/Barricades_Start" instance=ExtResource("8_k327m")]
+position = Vector2(149.99997, -656)
+script = ExtResource("9_haolw")
+
+[node name="Node2D" type="Node2D" parent="Terrain/Barricades_Start/Barricade"]
+position = Vector2(-607.49976, 407.49997)
+
+[node name="Barricades_End" type="Node2D" parent="Terrain"]
+
+[node name="Barricade" parent="Terrain/Barricades_End" instance=ExtResource("8_k327m")]
+position = Vector2(-92.99999, 87)
+script = ExtResource("9_haolw")
+_type = 1
+
+[node name="Node2D" type="Node2D" parent="Terrain/Barricades_End/Barricade"]
+position = Vector2(-237.50006, 517.5)
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(958, 540)
 zoom = Vector2(0.86, 0.86)
-
-[node name="Start_Point" type="Node2D" parent="."]
-position = Vector2(873, 138)

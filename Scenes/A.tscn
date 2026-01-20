@@ -87,19 +87,27 @@ script = ExtResource("1_h5kbe")
 position = Vector2(-2, -46)
 curve = SubResource("Curve2D_7ov2f")
 
-[node name="Barricade_Start" parent="Terrain" instance=ExtResource("5_vp0hx")]
+[node name="Barricades_Start" type="Node2D" parent="Terrain"]
+
+[node name="Barricade" parent="Terrain/Barricades_Start" instance=ExtResource("5_vp0hx")]
 position = Vector2(-580, 141)
 script = ExtResource("6_2jc3y")
 
-[node name="Barricade_End" parent="Terrain" instance=ExtResource("5_vp0hx")]
+[node name="Node2D" type="Node2D" parent="Terrain/Barricades_Start/Barricade"]
+position = Vector2(-647.49994, 467.49997)
+
+[node name="Barricades_End" type="Node2D" parent="Terrain"]
+
+[node name="Barricade" parent="Terrain/Barricades_End" instance=ExtResource("5_vp0hx")]
 position = Vector2(593, 149)
 script = ExtResource("6_2jc3y")
 _type = 1
 
-[node name="Node2D" type="Node2D" parent="Terrain/Barricade_End"]
+[node name="Node2D" type="Node2D" parent="Terrain/Barricades_End/Barricade"]
 position = Vector2(542.5, 465.00012)
 
 [node name="Crash_Zone" type="Area2D" parent="."]
+visible = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zone"]
 polygon = PackedVector2Array(-49, 847, 340, 839, 434, 808, 536, 618, 649, 352, 743, 200, 905, 90, 1080, 89, 1236, 200, 1328, 358, 1402, 599, 1468, 800, 1579, 844, 1771, 857, 2011, 859, 1985, -52, -56, -49)
@@ -112,6 +120,3 @@ polygon = PackedVector2Array(808, 541, 895, 365, 984, 295, 1052, 327, 1113, 435,
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(958, 540)
-
-[node name="Start_Point" type="Node2D" parent="."]
-position = Vector2(248, 954)
