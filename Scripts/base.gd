@@ -4,7 +4,10 @@ const _car_prefab:PackedScene = preload("res://Prefabs/car.tscn");
 
 @export var _scene_type:Globals.SceneType;
 
-signal Win(endPoint:Vector2);
+var _cars:Array[Node2D];
+var _routes_completed:int;
+
+signal Move_Car_To_End(car_idx:int, endPoint:Vector2);
 
 
 # Functions: Built-in ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -12,15 +15,26 @@ signal Win(endPoint:Vector2);
 
 func _ready() -> void:
 	
-	var car:Node2D = _car_prefab.instantiate();
-	car.set_script(load("res://Scripts/car.gd"));
-	car.position = $Terrain/Barricades_Start/Barricade/Node2D.global_position;
-	self.add_child(car);
+	var start_barricades:Array[Node] = $"Terrain/Barricades_Start".get_children();
 	
-	$Arrow/Path2D.Assign_Car(car);
+	for i in start_barricades.size():
+		# Create Car
+		var car:Node2D = _car_prefab.instantiate();
+		car.name = "Car" + str(i);
+		car.set_script(load("res://Scripts/car.gd"));
+		car.position = start_barricades[i].get_node('Node2D').global_position;
+		car.Set_Car_Idx(i);
+		_cars.append(car);
+		self.add_child(car);
+		
+		if i <= 0:
+			print('Car ',i ,' assigned');
+			$Arrow/Path2D.Assign_Car(car);
+			car.Assign_To_Arrow_Path();
+		
+		car.Car_Stopped.connect(_SIGNAL_Check_Prog_Next_Scene);
 	
-	$Car.Car_Stopped.connect(_SIGNAL_Progress_To_Next_Scene);
-	$Terrain/Barricades_End/Barricade.End_Barricade_Reached.connect(_Win);
+	$Terrain/Barricades_End/Barricade.End_Barricade_Reached.connect(_Check_Car_On_Barricade_Entry);
 	
 	Globals.CURRENT_SCENE_TYPE = _scene_type;
 
@@ -28,13 +42,18 @@ func _ready() -> void:
 # Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func _SIGNAL_Progress_To_Next_Scene() -> void:
-	Globals.Progress_To_Next_Scene();
+func _SIGNAL_Check_Prog_Next_Scene() -> void:
+	if _routes_completed == $Terrain/Barricades_Start.get_child_count() - 1:
+		Globals.Progress_To_Next_Scene();
+	else:
+		_routes_completed += 1;
+		var next_car:int = _routes_completed;
+		$Arrow/Path2D.Assign_Car(_cars[next_car]);
+		_cars[next_car].Assign_To_Arrow_Path();
 
 
 # Functions ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func _Win(endPoint:Vector2) -> void:
-	$Arrow.hide();
-	Win.emit(endPoint);
+func _Check_Car_On_Barricade_Entry(endPoint:Vector2) -> void:
+	Move_Car_To_End.emit(_routes_completed, endPoint);

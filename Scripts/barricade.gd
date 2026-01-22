@@ -32,10 +32,11 @@ func _input(event: InputEvent) -> void:
 
 func _SIGNAL_Car_Enter(area:Area2D) -> void:
 	
-	if area.get_parent().name == "Car":
+	if area.get_parent().name.contains("Car"):
 		# Signal Level Completion
 		if _type == BARR_TYPE.OUT:
 			End_Barricade_Reached.emit($Node2D.global_position);
+			area.get_parent().Standby();
 		# Animate Barricade
 		_Animate_Open();
 

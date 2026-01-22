@@ -205,7 +205,7 @@ radius = 40.0
 z_index = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.4, 0.4)
+scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("SpriteFrames_40mo6")
 animation = &"North_West_Lower"
 autoplay = "East"
