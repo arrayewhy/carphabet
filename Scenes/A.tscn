@@ -43,7 +43,7 @@ color = Color(0.89275575, 0.89275575, 0.8927557, 1)
 [node name="Arrow" type="Line2D" parent="."]
 z_index = -1
 points = PackedVector2Array(-126, -110, 93, -110)
-width = 128.0
+width = 64.0
 texture = ExtResource("1_gmk6s")
 texture_mode = 1
 joint_mode = 2
@@ -58,7 +58,7 @@ rotation = -0.15146263
 
 [node name="Arrow_Head" type="Sprite2D" parent="Arrow"]
 z_index = -1
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("3_c6scc")
 offset = Vector2(75, 0)
 
@@ -94,20 +94,30 @@ curve = SubResource("Curve2D_7ov2f")
 position = Vector2(-580, 141)
 script = ExtResource("6_2jc3y")
 
-[node name="Node2D" type="Node2D" parent="Terrain/Barricades_Start/Barricade"]
-position = Vector2(-647.49994, 467.49997)
+[node name="Points" type="Node2D" parent="Terrain/Barricades_Start/Barricade"]
+
+[node name="Node2D" type="Node2D" parent="Terrain/Barricades_Start/Barricade/Points"]
+position = Vector2(-1572.4998, 415)
+scale = Vector2(0.99999994, 0.99999994)
+
+[node name="Node2D2" type="Node2D" parent="Terrain/Barricades_Start/Barricade/Points"]
+position = Vector2(-575, 450)
+scale = Vector2(0.99999994, 0.99999994)
 
 [node name="Barricade2" parent="Terrain/Barricades_Start" instance=ExtResource("5_vp0hx")]
 position = Vector2(-20.999998, -155.00003)
 script = ExtResource("6_2jc3y")
 
-[node name="Node2D" type="Node2D" parent="Terrain/Barricades_Start/Barricade2"]
-position = Vector2(-224.99997, 452.50012)
+[node name="Points" type="Node2D" parent="Terrain/Barricades_Start/Barricade2"]
+
+[node name="Node2D" type="Node2D" parent="Terrain/Barricades_Start/Barricade2/Points"]
+position = Vector2(-225, 452.50012)
+scale = Vector2(0.99999994, 0.99999994)
 
 [node name="Barricades_End" type="Node2D" parent="Terrain"]
 
 [node name="Barricade" parent="Terrain/Barricades_End" instance=ExtResource("5_vp0hx")]
-position = Vector2(593, 149)
+position = Vector2(594, 97)
 script = ExtResource("6_2jc3y")
 _type = 1
 
