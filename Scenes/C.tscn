@@ -70,16 +70,6 @@ script = ExtResource("7_nmeif")
 position = Vector2(-2, -46)
 curve = SubResource("Curve2D_ejacw")
 
-[node name="Crash_Zone" type="Area2D" parent="Terrain"]
-visible = false
-position = Vector2(-995, -634)
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
-polygon = PackedVector2Array(1442, -21, 1478, 361, 1360, 449, 1126, 387, 892, 361, 704, 407, 638, 495, 638, 669, 704, 761, 846, 809, 1070, 797, 1332, 743, 1392, 719, 1518, 815, 1532, 1121, 1956, 1115, 1960, -27)
-
-[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Terrain/Crash_Zone"]
-polygon = PackedVector2Array(1256, -41, 1268, 209, 1058, 159, 776, 161, 584, 229, 446, 379, 400, 639, 462, 839, 586, 951, 856, 1017, 1058, 1013, 1320, 959, 1326, 1119, -24, 1127, -28, -37)
-
 [node name="Barricades_Start" type="Node2D" parent="Terrain"]
 
 [node name="Barricade" parent="Terrain/Barricades_Start" instance=ExtResource("8_v6eye")]
@@ -102,6 +92,15 @@ _type = 1
 
 [node name="Node2D" type="Node2D" parent="Terrain/Barricades_End/Barricade"]
 position = Vector2(27.500053, 805)
+
+[node name="Crash_Zone" type="Area2D" parent="."]
+visible = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zone"]
+polygon = PackedVector2Array(1442, -21, 1478, 361, 1360, 449, 1126, 387, 892, 361, 704, 407, 638, 495, 638, 669, 704, 761, 846, 809, 1070, 797, 1332, 743, 1392, 719, 1518, 815, 1532, 1121, 1956, 1115, 1960, -27)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Crash_Zone"]
+polygon = PackedVector2Array(1256, -41, 1268, 209, 1058, 159, 776, 161, 584, 229, 446, 379, 400, 639, 462, 839, 586, 951, 856, 1017, 1058, 1013, 1320, 959, 1326, 1119, -24, 1127, -28, -37)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(958, 540)
