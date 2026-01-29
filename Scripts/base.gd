@@ -3,8 +3,11 @@ extends Node2D
 @export var _curr_scene:Globals.SceneType;
 
 const _car_prefab:PackedScene = preload("res://Prefabs/car.tscn");
+const _arrow_prefab:PackedScene = preload("res://Prefabs/arrow.tscn");
 
-var _curr_car_idx;
+var _cars:Array[Node2D];
+var _curr_car_idx:int;
+var _curr_arrow:Line2D;
 
 signal Activate_Car;
 
@@ -18,8 +21,12 @@ func _ready() -> void:
 	
 	_curr_car_idx = 0;
 	
+	_curr_arrow = _arrow_prefab.instantiate();
+	self.add_child(_curr_arrow);
+	
 	# Spawn New Car and run its Configurations
 	var car:Node2D = _Create_And_Connect_Car_Then_Move_Along_Route();
+	_cars.push_back(car);
 	
 	$"Environment".add_child(car);
 	
@@ -42,8 +49,16 @@ func _SIGNAL_Check_Next_Step() -> void:
 		# Proceed to Next Level
 		print("Next!");
 	else:
+		
+		# Spawn a new Arrow to draw with so we Don't Disturb the previous one.
+		# Do this Before spawning the Car because the car has to connect to it.
+		_curr_arrow = _arrow_prefab.instantiate();
+		_curr_arrow.get_child(0).Reset();
+		self.add_child(_curr_arrow);
+		
 		# Prepare Next Car
 		var car:Node2D = _Create_And_Connect_Car_Then_Move_Along_Route();
+		_cars.push_back(car);
 		
 		$"Environment".add_child(car);
 		
@@ -52,7 +67,7 @@ func _SIGNAL_Check_Next_Step() -> void:
 
 func _SIGNAL_Restart() -> void:
 	await get_tree().create_timer(1).timeout;
-	$Arrow/Path2D.Reset();
+	_curr_arrow.get_child(0).Reset();
 	Globals._Reload_Current_Scene();
 
 
@@ -62,14 +77,19 @@ func _SIGNAL_Restart() -> void:
 func _Create_And_Connect_Car_Then_Move_Along_Route() -> Node2D:
 	var car:Node2D = _car_prefab.instantiate();
 	car.set_script(load("res://Scripts/car.gd"));
+	car.Connect_To_Arrow(_curr_arrow);
 	car.Move_Car_Along_Route(_Get_Start_Route());
 	car.Arrived.connect(_SIGNAL_Check_Next_Step);
 	car.Crash.connect(_SIGNAL_Restart);
-	$Arrow/Path2D.Connect_To_Car(car);
+	_curr_arrow.get_child(0).Connect_To_Car(car);
 	return car;
 
 
 # Functions: Get Set ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+func Get_Curr_Car() -> Node2D:
+	return _cars[_curr_car_idx];
 
 
 func Get_Start_Point() -> Vector2:
