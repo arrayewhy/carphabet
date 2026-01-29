@@ -17,3 +17,9 @@ func _process(_delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("F12"):
 		set_process(true);
+
+
+func Disconnect_Callables(sig:Signal) -> void:
+	for connection in sig.get_connections():
+		var callable:Callable = connection.callable;
+		sig.disconnect(callable);

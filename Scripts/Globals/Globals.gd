@@ -4,7 +4,7 @@ enum SceneType { Null, A, B, C }
 var CURRENT_SCENE_TYPE:SceneType;
 
 const Scenes:Dictionary[SceneType, String] = {
-	SceneType.A : "res://Scenes/A.tscn",
+	SceneType.A : "res://Scenes/cap_a.tscn",
 	SceneType.B : "res://Scenes/B.tscn",
 	SceneType.C : "res://Scenes/C.tscn",
 }
