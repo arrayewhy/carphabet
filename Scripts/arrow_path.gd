@@ -45,8 +45,15 @@ func _input(event: InputEvent) -> void:
 		return;
 	
 	if event.is_action_released("Click") && is_processing():
+		
+		_can_draw = false;
+		
 		set_process(false);
+		
 		Path_Complete.emit();
+		Tools.Disconnect_Callables(Path_Complete);
+		
+		$"../..".Get_Curr_Car().Mouseover_Car.disconnect(_SIGNAL_Set_Can_Draw);
 
 
 # Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||

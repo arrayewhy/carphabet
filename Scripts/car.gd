@@ -1,7 +1,7 @@
 extends Node2D
 
-@onready var _arrow_path:Path2D = $"../../Arrow/Path2D";
-@onready var _arrow_path_follow:PathFollow2D = _arrow_path.get_child(0);
+var _arrow_path:Path2D;
+var _arrow_path_follow:PathFollow2D;
 
 @onready var _car_sprite_scale:Vector2 = $AnimatedSprite2D.scale;
 
@@ -25,8 +25,6 @@ func _ready() -> void:
 	# Connect to Car Area Signals
 	$Area2D.mouse_entered.connect(_SIGNAL_Mouseover_Car.bind(true));
 	$Area2D.mouse_exited.connect(_SIGNAL_Mouseover_Car.bind(false));
-	# Connect to Arrow Path Signals
-	_arrow_path.Path_Complete.connect(_SIGNAL_Start_Driving);
 
 
 func _process(delta: float) -> void:
@@ -48,20 +46,29 @@ func _process(delta: float) -> void:
 	var end_point:Vector2 = $"../..".Get_End_Point();
 	if end_point.distance_to(self.global_position) <= 50:
 		
+		# We Disable Crash Detection here so that
+		# the car does not crash into anything on its End Route.
+		$Area2D.area_entered.disconnect(_SIGNAL_Crash);
+		
 		set_process(false);
 		
-		Move_Car_Along_Route($"../..".Get_End_Route());
+		# Move Car along End Route
+		var route:Array[Vector2] = $"../..".Get_End_Route();
 		
-		await _move_along_route_tween.finished;
+		if route.size() <= 1:
+			self.global_position = route[0];
+		else:
+			Move_Car_Along_Route(route);
+			await _move_along_route_tween.finished;
 		
+		# When the car is at its End Point,
+		# Delay briefly before Signalling that it has Arrived.
 		await get_tree().create_timer(1).timeout;
 		
 		Arrived.emit();
 		
 		Tools.Disconnect_Callables(Mouseover_Car);
 		Tools.Disconnect_Callables(Arrived);
-		
-		_arrow_path.Path_Complete.disconnect(_SIGNAL_Start_Driving);
 		
 		_arrow_path_follow.progress = 0;
 
@@ -77,24 +84,26 @@ func _SIGNAL_Start_Driving() -> void:
 	$Area2D.area_entered.connect(_SIGNAL_Crash);
 
 
-func _SIGNAL_Crash(area:Area2D) -> void:
+func _SIGNAL_Crash(_area:Area2D) -> void:
 	Crash.emit();
 	self.modulate = Color.RED;
 	set_process(false);
+
+
+func Connect_To_Arrow(arrow:Line2D) -> void:
+	_arrow_path = arrow.get_child(0);
+	_arrow_path_follow = _arrow_path.get_child(0);
+	_arrow_path.Path_Complete.connect(_SIGNAL_Start_Driving);
 
 
 func Move_Car_Along_Route(points:Array[Vector2]) -> void:
 	
 	self.global_position = points[0];
 	
-	if points.size() <= 1:
-		return;
-	
-	_move_along_route_tween = create_tween();
-	
 	for i in points.size() - 1:
 		
-		_move_along_route_tween.kill();
+		if _move_along_route_tween != null:
+			_move_along_route_tween.kill();
 		_move_along_route_tween = create_tween();
 		
 		var curr_point:Vector2 = points[i + 1];
