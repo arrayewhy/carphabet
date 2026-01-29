@@ -1,172 +1,159 @@
 extends Node2D
 
-@onready var _arrow_path:Path2D = $"../Arrow/Path2D";
-@onready var _arrow_path_follow:PathFollow2D = $"../Arrow/Path2D/PathFollow2D";
+@onready var _arrow_path:Path2D = $"../../Arrow/Path2D";
+@onready var _arrow_path_follow:PathFollow2D = _arrow_path.get_child(0);
 
-const _speed:float = 200;
 @onready var _car_sprite_scale:Vector2 = $AnimatedSprite2D.scale;
 
-var _car_idx:int;
+const _speed:float = 200;
 
-var _driving:bool;
 var _last_pos:Vector2;
 
-var _distortion_tween:Tween;
-var _wobble_tween:Tween;
+var _move_along_route_tween:Tween;
+var _car_distortion_tween:Tween;
+var _car_wobble_tween:Tween;
 
-var _mouse_on:bool;
-
-signal Car_Clicked;
-signal Car_Stopped();
-
-
-# Functions: Built-in ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+signal Mouseover_Car(state:bool);
+signal Arrived;
+signal Crash;
 
 
 func _ready() -> void:
 	
 	set_process(false);
 	
-	_arrow_path_follow.loop = false;
-	_arrow_path_follow.rotates = false;
-	
-	$Area2D.area_entered.connect(_Contact);
-	$Area2D.mouse_entered.connect(_SIGNAL_Boop_Car);
-	$Area2D.mouse_entered.connect(_SIGNAL_Mouse_On);
-	$Area2D.mouse_exited.connect(_SIGNAL_Mouse_Off);
-	
-	$"..".Move_Car_To_End.connect(_Move_To_EndPoint);
-	
-	_Engine_Tremor();
+	# Connect to Car Area Signals
+	$Area2D.mouse_entered.connect(_SIGNAL_Mouseover_Car.bind(true));
+	$Area2D.mouse_exited.connect(_SIGNAL_Mouseover_Car.bind(false));
+	# Connect to Arrow Path Signals
+	_arrow_path.Path_Complete.connect(_SIGNAL_Start_Driving);
 
 
 func _process(delta: float) -> void:
 	
-	_arrow_path_follow.progress += delta * _speed;
+	_arrow_path_follow.progress += _speed * delta;
 	self.global_position = _arrow_path_follow.global_position;
+	
+	# Remove Arrow Path Tail
+	#_arrow_path.Remove_Points_Around_Position(self.global_position);
+	
 	var direction:Vector2 = self.global_position - _last_pos;
 	direction = direction.normalized();
 	_last_pos = self.global_position;
 	
 	# Animation
 	$AnimatedSprite2D.Animate(direction);
+	
+	# Stop Car at the End Point
+	var end_point:Vector2 = $"../..".Get_End_Point();
+	if end_point.distance_to(self.global_position) <= 50:
+		
+		set_process(false);
+		
+		Move_Car_Along_Route($"../..".Get_End_Route());
+		
+		await _move_along_route_tween.finished;
+		
+		await get_tree().create_timer(1).timeout;
+		
+		Arrived.emit();
+		
+		Tools.Disconnect_Callables(Mouseover_Car);
+		Tools.Disconnect_Callables(Arrived);
+		
+		_arrow_path.Path_Complete.disconnect(_SIGNAL_Start_Driving);
+		
+		_arrow_path_follow.progress = 0;
 
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Click") && _mouse_on:
-		_mouse_on = false;
-		Car_Clicked.emit();
-		$Area2D.mouse_entered.disconnect(_SIGNAL_Mouse_On);
-		$Area2D.mouse_exited.disconnect(_SIGNAL_Mouse_Off);
-
-
-# Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-
-
-func _SIGNAL_Boop_Car() -> void:
-	# Animate Car on Mouseover
-	if _distortion_tween != null:
-		_distortion_tween.kill();
-	_distortion_tween = create_tween();
-	_distortion_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.2, .8), .05);
-	_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.8, 1.2), .05);
-	_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .05);
-	_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .05);
-	# Play Car Horn
-	AudioMaster.Play_CarHorn(true);
-	# Resume the Engine Tremor
-	await _distortion_tween.finished;
-	_Engine_Tremor();
+func _SIGNAL_Mouseover_Car(state:bool) -> void:
+	Mouseover_Car.emit(state);
 
 
 func _SIGNAL_Start_Driving() -> void:
-	_last_pos = self.global_position;
 	set_process(true);
-	_driving = true;
-	_Driving_Wobble();
+	_Wobble_Car_While_Driving();
+	# Connect to detect crash zones here, after the car has been spawned to avoid colliding on spawn
+	$Area2D.area_entered.connect(_SIGNAL_Crash);
 
 
-func _SIGNAL_Mouse_On() -> void:
-	_mouse_on = true;
-
-func _SIGNAL_Mouse_Off() -> void:
-	_mouse_on = false;
-
-
-func Assign_To_Arrow_Path() -> void:
-	_arrow_path.Arrow_Complete.connect(_SIGNAL_Start_Driving);
-
-
-# Functions ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-
-
-func _Contact(area:Area2D) -> void:
-	match area.name:
-		"Crash_Zone":
-			print("Bang!");
-			_driving = false;
-
-
-func Set_Car_Idx(idx:int) -> void:
-	_car_idx = idx;
-
-
-func Standby() -> void:
+func _SIGNAL_Crash(area:Area2D) -> void:
+	Crash.emit();
+	self.modulate = Color.RED;
 	set_process(false);
-	_arrow_path_follow.progress = 0;
-	_arrow_path.Arrow_Complete.disconnect(_SIGNAL_Start_Driving);
+
+
+func Move_Car_Along_Route(points:Array[Vector2]) -> void:
+	
+	self.global_position = points[0];
+	
+	if points.size() <= 1:
+		return;
+	
+	_move_along_route_tween = create_tween();
+	
+	for i in points.size() - 1:
+		
+		_move_along_route_tween.kill();
+		_move_along_route_tween = create_tween();
+		
+		var curr_point:Vector2 = points[i + 1];
+		var duration:float = self.global_position.distance_to(curr_point) / (_speed * 2);
+		
+		if i == 0:
+			_move_along_route_tween.tween_property(self, "global_position", curr_point, duration);
+		else:
+			_move_along_route_tween.chain().tween_property(self, "global_position", curr_point, duration);
+		
+		var direction:Vector2 = curr_point - self.global_position;
+		direction = direction.normalized();
+		
+		# Animate Turn
+		$AnimatedSprite2D.Animate(direction);
+		
+		await _move_along_route_tween.finished;
+
+
+
+
+
+
+func _Car_Bounce() -> void:
+	if _car_distortion_tween != null:
+		_car_distortion_tween.kill();
+	_car_distortion_tween = create_tween();
+	_car_distortion_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.2, .8), .05);
+	_car_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.8, 1.2), .05);
+	_car_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .05);
+	_car_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .05);
 
 
 func _Engine_Tremor() -> void:
-	
-	if _distortion_tween != null:
-		_distortion_tween.kill();
-	_distortion_tween = create_tween();
-	_distortion_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.975, 1.025), .05);
-	_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1, 1), .05);
+	if _car_distortion_tween != null:
+		_car_distortion_tween.kill();
+	_car_distortion_tween = create_tween();
+	_car_distortion_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.975, 1.025), .05);
+	_car_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1, 1), .05);
 	# Repeat the Tremor
-	await _distortion_tween.finished;
+	await _car_distortion_tween.finished;
 	_Engine_Tremor();
 
 
-func _Driving_Wobble() -> void:
+func _Wobble_Car_While_Driving() -> void:
 	
-	if _wobble_tween != null:
-		_wobble_tween.kill();
+	if _car_wobble_tween != null:
+		_car_wobble_tween.kill();
 		
-	_wobble_tween = create_tween();
-	_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .1);
-	_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .1);
+	_car_wobble_tween = create_tween();
+	_car_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .1);
+	_car_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .1);
 	
-	await _wobble_tween.finished;
+	await _car_wobble_tween.finished;
 	
-	if _driving:
-		_Driving_Wobble();
+	if is_processing():
+		_Wobble_Car_While_Driving();
 	else:
-		_wobble_tween.kill();
-		_wobble_tween = create_tween();
-		_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .2);
-		_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .3);
-
-
-func _Move_To_EndPoint(car_idx:int, endPoint:Vector2) -> void:
-
-	if car_idx != _car_idx:
-		return;
-
-	set_process(false);
-	
-	$AnimatedSprite2D.Animate((endPoint - global_position).normalized());
-	
-	var tween:Tween = create_tween();
-	tween.set_trans(Tween.TRANS_QUAD);
-	tween.set_ease(Tween.EASE_OUT);
-	tween.tween_property(self, "global_position", endPoint, 2);
-	
-	await tween.finished;
-	
-	_driving = false;
-	
-	await get_tree().create_timer(2).timeout;
-
-	Car_Stopped.emit();
+		_car_wobble_tween.kill();
+		_car_wobble_tween = create_tween();
+		_car_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .2);
+		_car_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .3);

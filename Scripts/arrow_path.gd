@@ -1,101 +1,93 @@
 extends Path2D
 
-@onready var _arrow_head:Sprite2D = $"../Arrow_Head";
-var _car:Node2D;
+var _can_draw:bool;
 
+var _mouse_move_thresh:float = 10;
 var _last_mouse_pos:Vector2;
-var _drawing:bool;
 
-var _arrow_ready:bool;
-
-signal Arrow_Complete;
+signal Path_Complete;
 
 
 # Functions: Built-in ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
 func _ready() -> void:
-	
 	set_process(false);
-	
-	_last_mouse_pos = get_global_mouse_position();
-	
-	$"..".clear_points();
-	_arrow_head.hide();
-	
-	#await get_tree().process_frame;
-	
-	#$"../../Car".Car_Clicked.connect(_SIGNAL_Start_Drawing);
+	$"../Arrow_Head".hide();
 
 
 func _process(_delta: float) -> void:
 	
-	if _drawing:
-		
-		if Input.is_action_just_released("Click"):
-			_drawing = false;
-			_arrow_ready = true;
-			Arrow_Complete.emit();
-			return;
+	var curr_mouse_pos:Vector2 = get_global_mouse_position();
 	
-		var mouse_pos:Vector2 = get_global_mouse_position();
-		if mouse_pos.distance_to(_last_mouse_pos) > 5:
-			
-			_arrow_head.show();
-			_arrow_head.position = mouse_pos;
-			var direction = (mouse_pos - _last_mouse_pos).normalized();
-			_arrow_head.rotation_degrees = rad_to_deg(direction.angle());
-			
-			_last_mouse_pos = mouse_pos;
-			self.curve.add_point(_last_mouse_pos);
-			$"../".points = self.curve.get_baked_points();
-			
+	if curr_mouse_pos.distance_to(_last_mouse_pos) > _mouse_move_thresh:
+		self.curve.add_point(curr_mouse_pos);
+		# Update Arrow Head Rotation
+		var direction = _last_mouse_pos.direction_to(curr_mouse_pos);
+		$"../Arrow_Head".rotation_degrees = rad_to_deg(direction.angle());
+		$"../Arrow_Head".global_position = curr_mouse_pos;
+		if !$"../Arrow_Head".visible:
+			$"../Arrow_Head".show();
+		# Update Arrow Line
+		$"..".points = self.curve.get_baked_points();
+		_last_mouse_pos = curr_mouse_pos;
+
+
+func _input(event: InputEvent) -> void:
+	
+	if event.is_action_pressed("Click") && _can_draw:
+		
+		_last_mouse_pos = get_global_mouse_position();
+		self.curve.add_point(_last_mouse_pos);
+		
+		set_process(true);
+		
 		return;
-			
-	# Remove Arrow Tail according to Progression
 	
-	elif _arrow_ready:
-		
-		var arrow_line_points:Array[Vector2];
-		
-		# We use 'assign()' instead of 'arrow_line_points = $"..".points'
-		# because '$"..".points' gives a PackedVector2 Array instead of
-		# the expected Array[Vector2]. These are not the same thing, apparently...
-		arrow_line_points.assign($"..".points);
-		
-		if arrow_line_points.size() <= 0:
-			$"..".clear_points();
-			_arrow_ready = false;
-			set_process(false);
-			_arrow_head.hide();
-			return;
-		
-		for point in arrow_line_points:
-			if point.distance_to(_car.global_position) < 100:
-				arrow_line_points.erase(point);
-		
-		$"..".points = arrow_line_points;
+	if event.is_action_released("Click") && is_processing():
+		set_process(false);
+		Path_Complete.emit();
 
 
 # Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func _SIGNAL_Start_Drawing() -> void:
-	_drawing = true;
-	set_process(true);
-	print("Draw");
+func _SIGNAL_Set_Can_Draw(state:bool) -> void:
+	_can_draw = state;
+
+
+func _SIGNAL_Reset_Arrow() -> void:
+	Reset();
 
 
 # Functions ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func Assign_Car(car:Node2D) -> void:
+func Reset() -> void:
+	self.curve.clear_points();
+	$"..".clear_points();
+	$"../Arrow_Head".hide();
+
+
+func Connect_To_Car(car:Node2D) -> void:
+	car.Mouseover_Car.connect(_SIGNAL_Set_Can_Draw);
+	#car.Arrived.connect(_SIGNAL_Reset_Arrow);
+
+
+func Remove_Points_Around_Position(global_pos:Vector2) -> void:
 	
-	if _car != null:
-		self.curve.clear_points();
-		$"../".clear_points();
-		_car.Car_Clicked.disconnect(_SIGNAL_Start_Drawing);
+	var arrow_line_points:Array[Vector2];
+	arrow_line_points.assign($"..".points);
 	
-	_car = car;
-	_car.Car_Clicked.connect(_SIGNAL_Start_Drawing);
-	print('Active Car: ', _car._car_idx);
+	var first_close_point_found:bool;
+	
+	for point in arrow_line_points:
+		if point.distance_to(global_pos) <= 50:
+			arrow_line_points.erase(point);
+			if !first_close_point_found:
+				first_close_point_found = true;
+		else:
+			if first_close_point_found:
+				break;
+	
+	$"..".points = arrow_line_points;

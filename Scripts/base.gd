@@ -1,13 +1,12 @@
 extends Node2D
 
+@export var _curr_scene:Globals.SceneType;
+
 const _car_prefab:PackedScene = preload("res://Prefabs/car.tscn");
 
-@export var _scene_type:Globals.SceneType;
+var _curr_car_idx;
 
-var _cars:Array[Node2D];
-var _routes_completed:int;
-
-signal Move_Car_To_End(car_idx:int, endPoint:Vector2);
+signal Activate_Car;
 
 
 # Functions: Built-in ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -15,80 +14,76 @@ signal Move_Car_To_End(car_idx:int, endPoint:Vector2);
 
 func _ready() -> void:
 	
-	var car_tween:Tween
+	Globals.CURRENT_SCENE_TYPE = _curr_scene;
 	
-	var start_barricades:Array[Node] = $"Terrain/Barricades_Start".get_children();
+	_curr_car_idx = 0;
 	
-	for i in start_barricades.size():
-		# Create Car
-		var car:Node2D = _car_prefab.instantiate();
-		car.name = "Car" + str(i);
-		car.set_script(load("res://Scripts/car.gd"));
-		car.Set_Car_Idx(i);
-		_cars.append(car);
-		self.add_child(car);
-		
-		if i <= 0:
-		
-			var start_point_nodes:Array[Node] = start_barricades[i].get_node("Points").get_children();
-			
-			if start_point_nodes.size() <= 1:
-				car.global_position = start_point_nodes[0].global_position;
-			else:
-				
-				# Create Route
-				var route_points:Array[Vector2];
-				for point in start_point_nodes:
-					route_points.append(point.global_position);
-				
-				# Position Car to First Point
-				car.global_position = route_points[0];
-				
-				# Move Car
-				car_tween = create_tween();
-				
-				for r in route_points.size() - 1:
-					var dist:float = car.global_position.distance_to(route_points[r + 1]);
-					if i <= 0:
-						car_tween.tween_property(car, "global_position", route_points[r + 1], dist / car._speed);
-					else:
-						car_tween.chain().tween_property(car, "global_position", route_points[r + 1], dist / car._speed);
-			
-		elif i > 0:
-			
-			car.global_position = start_barricades[i].get_node("Points").get_child(0).global_position;
-		
-		car.Car_Stopped.connect(_SIGNAL_Check_Prog_Next_Scene);
+	# Spawn New Car and run its Configurations
+	var car:Node2D = _Create_And_Connect_Car_Then_Move_Along_Route();
 	
-	$Terrain/Barricades_End/Barricade.End_Barricade_Reached.connect(_Check_Car_On_Barricade_Entry);
+	$"Environment".add_child(car);
 	
-	if car_tween != null:
-		await car_tween.finished;
-
-	# After the First Car is done moving in,
-	# prepare for Path Drawing.
-	$Arrow/Path2D.Assign_Car(_cars[0]);
-	_cars[0].Assign_To_Arrow_Path();
-	
-	Globals.CURRENT_SCENE_TYPE = _scene_type;
+	# Create the Car Holder
+	#var car_holder:Node2D = Node2D.new();
+	#car_holder.name = "Car_Holder";
+	#car_holder.add_child(car);
+	#
+	#self.add_child(car_holder);
 
 
 # Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func _SIGNAL_Check_Prog_Next_Scene() -> void:
-	if _routes_completed == $Terrain/Barricades_Start.get_child_count() - 1:
-		Globals.Progress_To_Next_Scene();
+func _SIGNAL_Check_Next_Step() -> void:
+	
+	_curr_car_idx += 1;
+	
+	if _curr_car_idx >= $Start_Routes.get_child_count():
+		# Proceed to Next Level
+		print("Next!");
 	else:
-		_routes_completed += 1;
-		var next_car:int = _routes_completed;
-		$Arrow/Path2D.Assign_Car(_cars[next_car]);
-		_cars[next_car].Assign_To_Arrow_Path();
+		# Prepare Next Car
+		var car:Node2D = _Create_And_Connect_Car_Then_Move_Along_Route();
+		
+		$"Environment".add_child(car);
+		
+		Activate_Car.emit(_curr_car_idx);
+
+
+func _SIGNAL_Restart() -> void:
+	await get_tree().create_timer(1).timeout;
+	$Arrow/Path2D.Reset();
+	Globals._Reload_Current_Scene();
 
 
 # Functions ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func _Check_Car_On_Barricade_Entry(endPoint:Vector2) -> void:
-	var car_idx:int = _routes_completed;
-	Move_Car_To_End.emit(car_idx, endPoint);
+func _Create_And_Connect_Car_Then_Move_Along_Route() -> Node2D:
+	var car:Node2D = _car_prefab.instantiate();
+	car.set_script(load("res://Scripts/car.gd"));
+	car.Move_Car_Along_Route(_Get_Start_Route());
+	car.Arrived.connect(_SIGNAL_Check_Next_Step);
+	car.Crash.connect(_SIGNAL_Restart);
+	$Arrow/Path2D.Connect_To_Car(car);
+	return car;
+
+
+# Functions: Get Set ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+func Get_Start_Point() -> Vector2:
+	return _Get_Start_Route()[0];
+
+func _Get_Start_Route() -> Array[Vector2]:
+	return $Start_Routes.get_child(_curr_car_idx).Get_Points();
+
+
+func Get_End_Point() -> Vector2:
+	return Get_End_Route()[0];
+
+func Get_End_Route() -> Array[Vector2]:
+	if _curr_car_idx < $End_Routes.get_child_count():
+		return $End_Routes.get_child(_curr_car_idx).Get_Points();
+	else:
+		return $End_Routes.get_child(0).Get_Points();
