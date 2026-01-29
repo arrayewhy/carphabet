@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="car"
-run/main_scene="uid://fea28rvgqm0"
+run/main_scene="uid://d05cewqd7l2ef"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 

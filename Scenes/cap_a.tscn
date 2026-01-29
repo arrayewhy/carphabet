@@ -1,19 +1,13 @@
-[gd_scene load_steps=17 format=3 uid="uid://d05cewqd7l2ef"]
+[gd_scene load_steps=13 format=3 uid="uid://d05cewqd7l2ef"]
 
 [ext_resource type="Script" uid="uid://bo7dai4h7f30p" path="res://Scripts/base.gd" id="1_gqhca"]
-[ext_resource type="Texture2D" uid="uid://dd1p3s4q5ybu7" path="res://Sprites/arrow_mid.png" id="2_gx0w5"]
-[ext_resource type="Script" uid="uid://dmrt848cht28t" path="res://Scripts/arrow_path.gd" id="3_pugay"]
-[ext_resource type="Texture2D" uid="uid://cl314h5j4hpvb" path="res://Sprites/arrow_head.png" id="4_2suvu"]
 [ext_resource type="Script" uid="uid://b87bvmpwsmd84" path="res://Scripts/crash_zones.gd" id="8_2suvu"]
 [ext_resource type="Texture2D" uid="uid://bh1jxoin7hhle" path="res://Sprites/maps/map_a_cap6.png" id="8_de5li"]
 [ext_resource type="Texture2D" uid="uid://c18xpaa4muwcx" path="res://Sprites/maps/map_a_cap4.png" id="8_gx0w5"]
-[ext_resource type="Script" uid="uid://bw3vsqpagwiys" path="res://Scenes/touch_obstacle.gd" id="9_2suvu"]
 [ext_resource type="Script" uid="uid://cl3m1rn1mllfl" path="res://Scripts/route.gd" id="9_pugay"]
 [ext_resource type="Texture2D" uid="uid://4hslukk2tpa7" path="res://Sprites/maps/map_a_cap5.png" id="10_nbbd5"]
+[ext_resource type="Script" uid="uid://bxxgd4lnspsfd" path="res://Scripts/touch_obstacle.gd" id="10_r4bvq"]
 [ext_resource type="Texture2D" uid="uid://c3lgeps8syt4m" path="res://Sprites/buildings/house_side_a.png" id="11_nbbd5"]
-
-[sub_resource type="Curve2D" id="Curve2D_gx0w5"]
-bake_interval = 50.0
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_2suvu"]
 
@@ -40,27 +34,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0.89275575, 0.89275575, 0.8927557, 1)
-
-[node name="Arrow" type="Line2D" parent="."]
-z_index = -1
-width = 256.0
-texture = ExtResource("2_gx0w5")
-texture_mode = 2
-joint_mode = 2
-
-[node name="Path2D" type="Path2D" parent="Arrow"]
-curve = SubResource("Curve2D_gx0w5")
-script = ExtResource("3_pugay")
-
-[node name="PathFollow2D" type="PathFollow2D" parent="Arrow/Path2D"]
-position = Vector2(-111, -61)
-rotation = -0.15146263
-loop = false
-
-[node name="Arrow_Head" type="Sprite2D" parent="Arrow"]
-visible = false
-texture = ExtResource("4_2suvu")
-offset = Vector2(75, 0)
 
 [node name="Crash_Zones" type="Area2D" parent="."]
 script = ExtResource("8_2suvu")
@@ -123,7 +96,6 @@ scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="End_Routes" type="Node2D" parent="."]
-visible = false
 
 [node name="Route" type="Node2D" parent="End_Routes"]
 position = Vector2(1503.7266, 870.7249)
@@ -148,6 +120,11 @@ position = Vector2(1309, 479)
 script = ExtResource("9_pugay")
 
 [node name="Point0" type="Sprite2D" parent="End_Routes/Route2"]
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Point1" type="Sprite2D" parent="End_Routes/Route2"]
+position = Vector2(906, 0)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_r4bvq")
 
@@ -214,7 +191,7 @@ region_rect = Rect2(160.65138, 1245.3619, 221.27382, 191.92114)
 
 [node name="Shy_Grass" type="Node2D" parent="Environment"]
 position = Vector2(1219, 350)
-script = ExtResource("9_2suvu")
+script = ExtResource("10_r4bvq")
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/Shy_Grass"]
 position = Vector2(-85, -12)
