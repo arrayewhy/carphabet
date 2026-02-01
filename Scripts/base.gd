@@ -48,6 +48,7 @@ func _SIGNAL_Check_Next_Step() -> void:
 	if _curr_car_idx >= $Start_Routes.get_child_count():
 		# Proceed to Next Level
 		print("Next!");
+		Globals.Progress_To_Next_Scene();
 	else:
 		
 		# Spawn a new Arrow to draw with so we Don't Disturb the previous one.

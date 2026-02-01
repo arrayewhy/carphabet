@@ -75,6 +75,9 @@ func _process(delta: float) -> void:
 
 func _SIGNAL_Mouseover_Car(state:bool) -> void:
 	Mouseover_Car.emit(state);
+	if state == true:
+		_Car_Bounce();
+		AudioMaster.Play_CarHorn();
 
 
 func _SIGNAL_Start_Driving() -> void:

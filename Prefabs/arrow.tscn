@@ -14,6 +14,7 @@ width = 256.0
 texture = ExtResource("1_nc78r")
 texture_mode = 1
 joint_mode = 2
+begin_cap_mode = 2
 
 [node name="Path2D" type="Path2D" parent="."]
 curve = SubResource("Curve2D_gx0w5")

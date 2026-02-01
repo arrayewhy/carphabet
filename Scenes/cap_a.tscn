@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://d05cewqd7l2ef"]
+[gd_scene load_steps=12 format=3 uid="uid://d05cewqd7l2ef"]
 
 [ext_resource type="Script" uid="uid://bo7dai4h7f30p" path="res://Scripts/base.gd" id="1_gqhca"]
 [ext_resource type="Script" uid="uid://b87bvmpwsmd84" path="res://Scripts/crash_zones.gd" id="8_2suvu"]
@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://cl3m1rn1mllfl" path="res://Scripts/route.gd" id="9_pugay"]
 [ext_resource type="Texture2D" uid="uid://4hslukk2tpa7" path="res://Sprites/maps/map_a_cap5.png" id="10_nbbd5"]
 [ext_resource type="Script" uid="uid://bxxgd4lnspsfd" path="res://Scripts/touch_obstacle.gd" id="10_r4bvq"]
-[ext_resource type="Texture2D" uid="uid://c3lgeps8syt4m" path="res://Sprites/buildings/house_side_a.png" id="11_nbbd5"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_2suvu"]
 
@@ -24,7 +23,6 @@ _curr_scene = 1
 
 [node name="BG_Colour" type="CanvasLayer" parent="."]
 layer = -1
-visible = false
 
 [node name="ColorRect" type="ColorRect" parent="BG_Colour"]
 anchors_preset = 15
@@ -33,38 +31,41 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.89275575, 0.89275575, 0.8927557, 1)
+color = Color(0.78039217, 0.78039217, 0.78039217, 1)
 
 [node name="Crash_Zones" type="Area2D" parent="."]
+visible = false
+top_level = true
 script = ExtResource("8_2suvu")
 _changes = Dictionary[int, Array]({
 0: [NodePath("CollisionPolygon2D4"), NodePath("CollisionPolygon2D5"), NodePath("CollisionPolygon2D6"), NodePath("CollisionPolygon2D7")]
 })
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(-265, 854, 273, 844, 434, 808, 547, 640, 598, 568, 475, 465, 584, 325, 713, 413, 931, 74, 1011, 79, 1209, 362, 1356, 317, 1471, 446, 1350, 570, 1490, 752, 1587, 829, 1779, 837, 2189, 842, 1985, -52, -56, -49)
+polygon = PackedVector2Array(-265, 854, 273, 844, 434, 808, 547, 640, 598, 568, 475, 465, 584, 325, 713, 413, 931, 74, 1011, 79, 1209, 362, 1472, 268, 1639, 544, 1393, 624, 1490, 752, 1587, 829, 1779, 837, 2189, 842, 1985, -52, -56, -49)
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(-292, 1023, 286, 1017, 454, 991, 575, 935, 673, 788, 805, 571, 1139, 563, 1224, 666, 1367, 900, 1444, 957, 1611, 973, 2192, 978, 2200, 1254, -295, 1234)
+polygon = PackedVector2Array(-292, 1023, 286, 1017, 454, 991, 575, 935, 673, 788, 778, 623, 1185, 611, 1367, 900, 1444, 957, 1611, 973, 2192, 978, 2200, 1254, -295, 1234)
 
 [node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(885, 442, 967, 305, 1059, 437)
+polygon = PackedVector2Array(857, 471, 968, 293, 1085, 468)
 
 [node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(805, 571, 885, 442, 1059, 437, 1139, 563)
+polygon = PackedVector2Array(781, 614, 864, 481, 1085, 478, 1180, 606)
 
 [node name="CollisionPolygon2D5" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(1209, 362, 1350, 570, 1471, 446, 1356, 317)
+polygon = PackedVector2Array(1214, 375, 1386, 610, 1621, 537, 1470, 284)
 
 [node name="CollisionPolygon2D6" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(713, 413, 885, 442, 967, 305, 1059, 437, 1209, 362, 1011, 79, 931, 74)
+polygon = PackedVector2Array(729, 423, 852, 466, 967, 284, 1089, 461, 1201, 379, 1004, 89, 937, 86)
 disabled = true
 
 [node name="CollisionPolygon2D7" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(475, 465, 584, 325, 713, 413, 598, 568)
+polygon = PackedVector2Array(488, 464, 588, 343, 699, 415, 600, 552)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(958, 540)
+zoom = Vector2(0.9, 0.9)
 
 [node name="Start_Routes" type="Node2D" parent="."]
 visible = false
@@ -78,7 +79,7 @@ scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="Point1" type="Sprite2D" parent="Start_Routes/Route"]
-position = Vector2(469, 0)
+position = Vector2(671, 0)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_nbbd5")
 
@@ -87,15 +88,17 @@ position = Vector2(752, 496)
 script = ExtResource("9_pugay")
 
 [node name="Point0" type="Sprite2D" parent="Start_Routes/Route2"]
-position = Vector2(-149, -53)
+position = Vector2(-866, 58)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="Point1" type="Sprite2D" parent="Start_Routes/Route2"]
+position = Vector2(-38, 58)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="End_Routes" type="Node2D" parent="."]
+visible = false
 
 [node name="Route" type="Node2D" parent="End_Routes"]
 position = Vector2(1503.7266, 870.7249)
@@ -120,11 +123,12 @@ position = Vector2(1309, 479)
 script = ExtResource("9_pugay")
 
 [node name="Point0" type="Sprite2D" parent="End_Routes/Route2"]
+position = Vector2(-78, 50)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_r4bvq")
 
 [node name="Point1" type="Sprite2D" parent="End_Routes/Route2"]
-position = Vector2(906, 0)
+position = Vector2(906, 50)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_r4bvq")
 
@@ -132,57 +136,104 @@ texture = SubResource("PlaceholderTexture2D_r4bvq")
 y_sort_enabled = true
 
 [node name="Bottom_Left" type="Sprite2D" parent="Environment"]
-position = Vector2(395, 1005)
+modulate = Color(0.9, 0.9, 0.9, 1)
+position = Vector2(136, 985.5)
 texture = ExtResource("8_de5li")
 offset = Vector2(12.57, -205.75)
 region_enabled = true
-region_rect = Rect2(59.806534, 25.46154, 314.4522, 476.5501)
+region_rect = Rect2(59.806534, 25.46154, 218.87373, 497.97607)
 
 [node name="Bottom_Left2" type="Sprite2D" parent="Environment"]
-position = Vector2(379, 865)
+modulate = Color(0.9, 0.9, 0.9, 1)
+position = Vector2(121, 841.95)
 texture = ExtResource("8_de5li")
 offset = Vector2(0, -64.95)
 region_enabled = true
-region_rect = Rect2(24.125061, 506.59503, 340.01013, 473.11017)
+region_rect = Rect2(7.897461, 518.4359, 266.9744, 494.00006)
+
+[node name="Mid_Right" type="Sprite2D" parent="Environment"]
+modulate = Color(0.9, 0.9, 0.9, 1)
+position = Vector2(1417.5, 587.5)
+texture = ExtResource("8_de5li")
+offset = Vector2(12.57, -205.75)
+region_enabled = true
+region_rect = Rect2(59.806534, 25.46154, 219.75633, 493.1046)
+
+[node name="Mid_Right2" type="Sprite2D" parent="Environment"]
+modulate = Color(0.9, 0.9, 0.9, 1)
+position = Vector2(1397.5, 443.95)
+texture = ExtResource("8_de5li")
+offset = Vector2(0, -64.95)
+region_enabled = true
+region_rect = Rect2(6.269287, 517.737, 267.93042, 492.6701)
 
 [node name="Bottom_Right" type="Sprite2D" parent="Environment"]
-position = Vector2(1600.4299, 971.75)
+modulate = Color(0.9, 0.9, 0.9, 1)
+position = Vector2(1560.43, 962)
 texture = ExtResource("8_de5li")
 offset = Vector2(12.57, -205.75)
 flip_h = true
 region_enabled = true
-region_rect = Rect2(59.806534, 25.46154, 314.4522, 476.5501)
+region_rect = Rect2(59.806534, 25.46154, 228.19624, 490.97742)
 
 [node name="Bottom_Right2" type="Sprite2D" parent="Environment"]
-position = Vector2(1634.4299, 831.5)
+modulate = Color(0.9, 0.9, 0.9, 1)
+position = Vector2(1605.2899, 824.45)
 texture = ExtResource("8_de5li")
 offset = Vector2(0, -64.95)
 flip_h = true
 region_enabled = true
-region_rect = Rect2(24.125061, 506.59503, 340.01013, 473.11017)
+region_rect = Rect2(7.7436523, 519.0257, 270.87183, 501.79486)
 
-[node name="HouseSideA2" type="Sprite2D" parent="Environment"]
-position = Vector2(1357, 486.99997)
-scale = Vector2(1, 0.7199988)
-texture = ExtResource("11_nbbd5")
-offset = Vector2(0, -121.22)
+[node name="Mid_Left" type="Sprite2D" parent="Environment"]
+modulate = Color(0.89, 0.89, 0.89, 1)
+position = Vector2(483.64, 612.5)
+texture = ExtResource("8_de5li")
+offset = Vector2(12.57, -205.75)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(59.806534, 25.46154, 217.92479, 491.20178)
+
+[node name="Mid_Left2" type="Sprite2D" parent="Environment"]
+modulate = Color(0.89, 0.89, 0.89, 1)
+position = Vector2(521.5, 472.95)
+texture = ExtResource("8_de5li")
+offset = Vector2(0, -64.95)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(6.574402, 513.53845, 279.73846, 504.81543)
 
 [node name="Lampost" type="Sprite2D" parent="Environment"]
-position = Vector2(496, 695)
-texture = ExtResource("8_gx0w5")
+position = Vector2(667, 462)
+texture = ExtResource("8_de5li")
+offset = Vector2(47.48, -168.65)
+region_enabled = true
+region_rect = Rect2(76.00932, 1796.8732, 208.56111, 418.7328)
+
+[node name="Lampost2" type="Sprite2D" parent="Environment"]
+position = Vector2(469, 770)
+texture = ExtResource("8_de5li")
+offset = Vector2(47.48, -168.65)
+region_enabled = true
+region_rect = Rect2(76.00932, 1796.8732, 208.56111, 418.7328)
+
+[node name="Lampost3" type="Sprite2D" parent="Environment"]
+position = Vector2(1778, 821)
+texture = ExtResource("8_de5li")
 offset = Vector2(47.48, -168.65)
 region_enabled = true
 region_rect = Rect2(76.00932, 1796.8732, 208.56111, 418.7328)
 
 [node name="Bush" type="Sprite2D" parent="Environment"]
-position = Vector2(1423, 594)
-scale = Vector2(0.7409793, 0.7409793)
-texture = ExtResource("8_gx0w5")
-offset = Vector2(0, -109.19)
+modulate = Color(0.85, 0.85, 0.85, 1)
+position = Vector2(1487, 664)
+texture = ExtResource("8_de5li")
+offset = Vector2(46.03, -72.57)
 region_enabled = true
 region_rect = Rect2(132.96707, 1490.4133, 280.16537, 281.81824)
 
 [node name="Rock" type="Sprite2D" parent="Environment"]
+modulate = Color(0.85, 0.85, 0.85, 1)
 position = Vector2(972.00006, 349)
 scale = Vector2(0.50480306, 0.50480306)
 texture = ExtResource("8_gx0w5")
@@ -190,7 +241,7 @@ region_enabled = true
 region_rect = Rect2(160.65138, 1245.3619, 221.27382, 191.92114)
 
 [node name="Shy_Grass" type="Node2D" parent="Environment"]
-position = Vector2(1219, 350)
+position = Vector2(1255, 331)
 script = ExtResource("10_r4bvq")
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/Shy_Grass"]
@@ -214,6 +265,76 @@ position = Vector2(14, 4)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/Shy_Grass/Area2D"]
 position = Vector2(-101, -54)
 shape = SubResource("CircleShape2D_r4bvq")
+
+[node name="Shy_Grass2" type="Node2D" parent="Environment"]
+position = Vector2(503, 643)
+scale = Vector2(-1, 1)
+script = ExtResource("10_r4bvq")
+
+[node name="Sprite2D" type="Sprite2D" parent="Environment/Shy_Grass2"]
+position = Vector2(-85, -12)
+scale = Vector2(0.7986623, 0.7986623)
+texture = ExtResource("10_nbbd5")
+region_enabled = true
+region_rect = Rect2(2999.2397, 49.946106, 248.9331, 222.4028)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Environment/Shy_Grass2"]
+visible = false
+position = Vector2(-53, -95)
+scale = Vector2(0.7986623, 0.7986623)
+texture = ExtResource("10_nbbd5")
+region_enabled = true
+region_rect = Rect2(3299.3528, 27.65632, 158.00366, 262.25708)
+
+[node name="Area2D" type="Area2D" parent="Environment/Shy_Grass2"]
+position = Vector2(14, 4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/Shy_Grass2/Area2D"]
+position = Vector2(-101, -54)
+shape = SubResource("CircleShape2D_r4bvq")
+
+[node name="Shy_Grass3" type="Node2D" parent="Environment"]
+position = Vector2(1101, 668)
+scale = Vector2(-1, 1)
+script = ExtResource("10_r4bvq")
+
+[node name="Sprite2D" type="Sprite2D" parent="Environment/Shy_Grass3"]
+position = Vector2(-85, -12)
+scale = Vector2(0.7986623, 0.7986623)
+texture = ExtResource("10_nbbd5")
+region_enabled = true
+region_rect = Rect2(2999.2397, 49.946106, 248.9331, 222.4028)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Environment/Shy_Grass3"]
+visible = false
+position = Vector2(-53, -95)
+scale = Vector2(0.7986623, 0.7986623)
+texture = ExtResource("10_nbbd5")
+region_enabled = true
+region_rect = Rect2(3299.3528, 27.65632, 158.00366, 262.25708)
+
+[node name="Area2D" type="Area2D" parent="Environment/Shy_Grass3"]
+position = Vector2(14, 4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/Shy_Grass3/Area2D"]
+position = Vector2(-101, -54)
+shape = SubResource("CircleShape2D_r4bvq")
+
+[node name="Sprite2D" type="Sprite2D" parent="Environment"]
+modulate = Color(0.76, 0.76, 0.76, 1)
+position = Vector2(1999, 739)
+texture = ExtResource("8_de5li")
+offset = Vector2(0, -200.65)
+region_enabled = true
+region_rect = Rect2(3157.951, 330.05585, 346.4756, 592.94495)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Environment"]
+modulate = Color(0.8142998, 0.8142998, 0.8142998, 1)
+position = Vector2(-99, 749)
+texture = ExtResource("8_de5li")
+offset = Vector2(0, -265.17)
+region_enabled = true
+region_rect = Rect2(3214.5007, 941.00006, 290.50024, 686.88446)
 
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -2
