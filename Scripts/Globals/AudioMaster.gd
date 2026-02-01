@@ -15,11 +15,11 @@ func _ready() -> void:
 	self.add_child(_audio_player_holder);
 
 
-func Play_CarHorn(shiftPitch:bool = false) -> void:
-	_Play_Sound(_sounds["Car_Horn"], shiftPitch);
+func Play_CarHorn() -> void:
+	_Play_Sound(_sounds["Car_Horn"], false, .2);
 
 
-func _Play_Sound(audioStream:AudioStream, shiftPitch:bool) -> void:
+func _Play_Sound(audioStream:AudioStream, shiftPitch:bool, vol:float = 1) -> void:
 	
 	var aud_player:AudioStreamPlayer2D;
 	
@@ -42,6 +42,8 @@ func _Play_Sound(audioStream:AudioStream, shiftPitch:bool) -> void:
 		_audio_player_holder.add_child(aud_player);
 	
 	aud_player.stream = audioStream;
+	
+	aud_player.volume_linear = vol;
 	
 	if shiftPitch:
 		aud_player.pitch_scale = 1 + randf_range(0, .05);
