@@ -1,10 +1,38 @@
 extends Node
 
-const _sounds:Dictionary[String, AudioStream] = {
-	"Car_Horn" : preload("res://Audio/SFX/car_horn.wav"),
+enum OBSTACLE_SOUND { NULL, Leaf_Rustle }
+
+const _sounds:Dictionary[String, Array] = {
+	"Car_Engling_Idle" : [preload("res://Audio/SFX/car/car_engine_idle.wav")],
+	"Car_Horn" : [preload("res://Audio/SFX/car/car_horn.wav")],
+	"Metal_Bang" : [preload("res://Audio/SFX/car/metal_impact.wav")],
+	"Tyre_Screech" : [
+		preload("res://Audio/SFX/car/tyre_screech_01.wav"), 
+		preload("res://Audio/SFX/car/tyre_screech_02.wav")],
+	"Leaf_Rustle" : [
+		preload("res://Audio/SFX/leaf/leaf_rustle_1.wav"),
+		preload("res://Audio/SFX/leaf/leaf_rustle_2.wav"),
+		preload("res://Audio/SFX/leaf/leaf_rustle_3.wav")
+		],
+	"Stone_Clack" : [
+		preload("res://Audio/SFX/stones/stone_on_concrete_01.wav"),
+		preload("res://Audio/SFX/stones/stone_on_concrete_02.wav"),
+		preload("res://Audio/SFX/stones/stone_on_concrete_03.wav"),
+		preload("res://Audio/SFX/stones/stone_on_concrete_04.wav"),
+		preload("res://Audio/SFX/stones/stone_on_concrete_05.wav"),
+		preload("res://Audio/SFX/stones/stone_on_concrete_06.wav"),
+		preload("res://Audio/SFX/stones/stone_on_concrete_07.wav"),
+		preload("res://Audio/SFX/stones/stone_on_concrete_08.wav"),
+	]
 }
 
 var _audio_player_holder:Node;
+var _bgm_player:AudioStreamPlayer;
+
+signal Silenced;
+
+
+# Functions: Built-in ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
 func _ready() -> void:
@@ -13,10 +41,35 @@ func _ready() -> void:
 	_audio_player_holder.name = "SFX_Holder";
 	_audio_player_holder.add_child(AudioStreamPlayer2D.new());
 	self.add_child(_audio_player_holder);
+	
+	_Play_BGM();
 
 
-func Play_CarHorn() -> void:
-	_Play_Sound(_sounds["Car_Horn"], false, .2);
+# Functions: Sounds ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+func Play_Car_Horn() -> void:
+	_Play_Sound(_sounds["Car_Horn"][0], true, .4);
+
+
+func Play_Car_Engine_Idle() -> void:
+	_Play_Sound(_sounds["Car_Engling_Idle"][0], false, .4);
+
+
+func Play_Metal_Bang() -> void:
+	_Play_Sound(_sounds["Metal_Bang"][0], true, 1);
+
+
+func Play_Tyre_Screech() -> void:
+	_Play_Sound(_sounds["Tyre_Screech"][randi_range(0, _sounds["Tyre_Screech"].size() - 1)], true, 1);
+
+
+func Play_Leaf_Rustle() -> void:
+	_Play_Sound(_sounds["Leaf_Rustle"][randi_range(0, _sounds["Leaf_Rustle"].size() - 1)], true, 2)
+
+
+func Play_Stone_Clack() -> void:
+	_Play_Sound(_sounds["Stone_Clack"][randi_range(0, _sounds["Stone_Clack"].size() - 1)], true, 1);
 
 
 func _Play_Sound(audioStream:AudioStream, shiftPitch:bool, vol:float = 1) -> void:
@@ -49,3 +102,33 @@ func _Play_Sound(audioStream:AudioStream, shiftPitch:bool, vol:float = 1) -> voi
 		aud_player.pitch_scale = 1 + randf_range(0, .05);
 	
 	aud_player.play();
+
+
+func Fade_All_Sounds_Out() -> void:
+	
+	var stop_tween:Tween = create_tween();
+	
+	stop_tween.set_parallel(true);
+	
+	for aud_player in _audio_player_holder.get_children():
+		stop_tween.tween_property(aud_player, "volume_linear", 0, 2);
+	
+	await stop_tween.finished;
+	
+	for aud_player in _audio_player_holder.get_children():
+		aud_player.stop();
+	
+	Silenced.emit();
+
+
+# Functions: BGM ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+func _Play_BGM() -> void:
+	# Create BGM Player
+	_bgm_player = AudioStreamPlayer.new();
+	_bgm_player.stream = load("res://Audio/Music/Digimon World - File City (Day).mp3");
+	_bgm_player.volume_linear = .15;
+	self.add_child(_bgm_player);
+	# Play
+	_bgm_player.play();
