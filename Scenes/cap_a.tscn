@@ -243,6 +243,7 @@ region_rect = Rect2(160.65138, 1245.3619, 221.27382, 191.92114)
 [node name="Shy_Grass" type="Node2D" parent="Environment"]
 position = Vector2(1255, 331)
 script = ExtResource("10_r4bvq")
+_play_sound = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/Shy_Grass"]
 position = Vector2(-85, -12)
@@ -270,6 +271,7 @@ shape = SubResource("CircleShape2D_r4bvq")
 position = Vector2(503, 643)
 scale = Vector2(-1, 1)
 script = ExtResource("10_r4bvq")
+_play_sound = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/Shy_Grass2"]
 position = Vector2(-85, -12)
@@ -297,6 +299,7 @@ shape = SubResource("CircleShape2D_r4bvq")
 position = Vector2(1101, 668)
 scale = Vector2(-1, 1)
 script = ExtResource("10_r4bvq")
+_play_sound = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/Shy_Grass3"]
 position = Vector2(-85, -12)

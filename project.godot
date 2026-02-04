@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 Globals="*res://Scripts/Globals/Globals.gd"
 AudioMaster="*res://Scripts/Globals/AudioMaster.gd"
 Tools="*res://Scripts/Globals/Tools.gd"
+Curtain="*res://Prefabs/curtain.tscn"
 
 [display]
 
