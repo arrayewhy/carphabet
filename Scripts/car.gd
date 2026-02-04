@@ -45,6 +45,7 @@ func _process(delta: float) -> void:
 		# Sound
 		AudioMaster.Play_Tyre_Screech();
 		Accident.emit();
+		return;
 	
 	# Position the car at the 'head' of the Arrow's PathFollow object.
 	self.global_position = _arrow_path_follow.global_position;
@@ -141,7 +142,7 @@ func Move_Car_Along_Route(points:Array[Vector2]) -> void:
 		if i == 0:
 			_move_along_route_tween.tween_property(self, "global_position", curr_point, duration);
 		else:
-			_move_along_route_tween.chain().tween_property(self, "global_position", curr_point, duration);
+			_move_along_route_tween.tween_property(self, "global_position", curr_point, duration);
 		
 		var direction:Vector2 = curr_point - self.global_position;
 		direction = direction.normalized();

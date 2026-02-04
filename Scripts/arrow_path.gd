@@ -2,8 +2,9 @@ extends Path2D
 
 var _can_draw:bool;
 
-var _mouse_move_thresh:float = 10;
+var _mouse_move_thresh:float = 50;
 var _last_mouse_pos:Vector2;
+var _last_dir:Vector2 = Vector2.INF;
 
 signal Path_Complete;
 
@@ -24,6 +25,8 @@ func _process(_delta: float) -> void:
 		self.curve.add_point(curr_mouse_pos);
 		# Update Arrow Head Rotation
 		var direction = _last_mouse_pos.direction_to(curr_mouse_pos);
+		print(direction.dot(_last_dir))
+		_last_dir = direction;
 		$"../Arrow_Head".rotation_degrees = rad_to_deg(direction.angle());
 		$"../Arrow_Head".global_position = curr_mouse_pos;
 		if !$"../Arrow_Head".visible:

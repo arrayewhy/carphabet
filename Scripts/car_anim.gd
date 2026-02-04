@@ -29,7 +29,7 @@ func _process(_delta: float) -> void:
 
 func Animate(direction:Vector2) -> void:
 	
-	const thresh_mod:float = 2;
+	#const thresh_mod:float = 2;
 	
 	# Vertical
 	#if abs(direction.y) > abs(direction.x):
@@ -103,17 +103,16 @@ func Animate(direction:Vector2) -> void:
 				play('South_East_Lower');
 			elif direction.x > 0.5:
 				play('South_East_Upper');
-	
-	# Horizontal
-	#elif abs(direction.x) > abs(direction.y):
-		#
-		## Left
-		#if direction.x < 0:
-			#print("Left");
-			#
-		## Right
-		#elif direction.x > 0:
-			#print("Right");
+				
+	else:
+		
+		if direction.x < 0:
+			play('West');
+			
+		elif direction.x > 0:
+			play('East');
+			
+	#print(str(self.animation, " : ", direction));
 	
 	return;
 	

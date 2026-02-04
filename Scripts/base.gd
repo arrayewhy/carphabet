@@ -25,7 +25,7 @@ func _ready() -> void:
 	self.add_child(_curr_arrow);
 	
 	# Spawn New Car and run its Configurations
-	var car:Node2D = _Create_And_Connect_Car_Then_Move_Along_Route();
+	var car:Node2D = _Create_And_Connect_Car();
 	_cars.push_back(car);
 	
 	$"Environment".add_child(car);
@@ -77,7 +77,7 @@ func _SIGNAL_Check_Next_Step() -> void:
 		self.add_child(_curr_arrow);
 		
 		# Prepare Next Car
-		var car:Node2D = _Create_And_Connect_Car_Then_Move_Along_Route();
+		var car:Node2D = _Create_And_Connect_Car();
 		_cars.push_back(car);
 		
 		$"Environment".add_child(car);
@@ -107,7 +107,7 @@ func _SIGNAL_Restart() -> void:
 # Functions ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func _Create_And_Connect_Car_Then_Move_Along_Route() -> Node2D:
+func _Create_And_Connect_Car() -> Node2D:
 	var car:Node2D = _car_prefab.instantiate();
 	car.set_script(load("res://Scripts/car.gd"));
 	car.Connect_To_Arrow(_curr_arrow);
