@@ -1,17 +1,19 @@
+@icon("res://Misc/Icons/bars_icon_red.png")
 extends Node2D
 
 var _hovering:bool;
 
 var _spr_array:Array[Sprite2D];
 
+@export var _play_sound:AudioMaster.OBSTACLE_SOUND;
+
 
 func _ready() -> void:
 	
 	# Record all Children as Sprite2Ds except
 	# for the Last one which should be an Area2D.
-	for i in self.get_child_count():
-		if i < self.get_child_count() - 1:
-			_spr_array.push_back(self.get_child(i));
+	for i in self.get_child_count() - 1:
+		_spr_array.push_back(self.get_child(i));
 	
 	$Area2D.mouse_entered.connect(_Hover);
 	$Area2D.mouse_exited.connect(_Hover);
@@ -30,6 +32,14 @@ func _input(event: InputEvent) -> void:
 		
 		_spr_array[0].hide();
 		_spr_array[1].show();
+		
+		# Sound
+		
+		match _play_sound:
+			AudioMaster.OBSTACLE_SOUND.NULL:
+				pass;
+			AudioMaster.OBSTACLE_SOUND.Leaf_Rustle:
+				AudioMaster.Play_Leaf_Rustle();
 
 
 func _Hover() -> void:
