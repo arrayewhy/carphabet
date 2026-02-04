@@ -4,6 +4,8 @@ const _turn_thresh:float = .6;
 
 const _debug:bool = false;
 
+var _turning:bool;
+
 
 func _ready() -> void:
 	
@@ -27,6 +29,99 @@ func _process(_delta: float) -> void:
 
 func Animate(direction:Vector2) -> void:
 	
+	const thresh_mod:float = 2;
+	
+	# Vertical
+	#if abs(direction.y) > abs(direction.x):
+		
+	# Up
+	if direction.y < 0:
+		
+		# Left
+		if direction.x < 0:
+			
+			if direction.x > -0.1:
+				play('North');
+			elif direction.x < -0.9:
+				play('West');
+				
+			elif direction.x < -0.4 && direction.x > -0.6:
+				play('North_West');
+			
+			elif direction.x > -0.5:
+				play('North_West_Upper');
+			elif direction.x < -0.5:
+				play('North_West_Lower');
+		
+		# Right
+		elif direction.x > 0:
+			
+			if direction.x < 0.1:
+				play('North');
+			elif direction.x > 0.9:
+				play('East');
+			
+			elif direction.x > 0.4 && direction.x < 0.6:
+				play('North_East');
+			
+			elif direction.x < 0.5:
+				play('North_East_Upper');
+			elif direction.x > 0.5:
+				play('North_East_Lower');
+		
+	# Down
+	elif direction.y > 0:
+		
+		# Left
+		if direction.x < 0:
+			
+			if direction.x > -0.1:
+				play('South');
+			elif direction.x < -0.9:
+				play('West');
+			
+			elif direction.x < -0.4 && direction.x > -0.6:
+				play('South_West');
+			
+			elif direction.x > -0.5:
+				play('South_West_Lower');
+			elif direction.x < -0.5:
+				play('South_West_Upper');
+		
+		# Right
+		elif direction.x > 0:
+			
+			if direction.x < 0.1:
+				play('South');
+			elif direction.x > 0.9:
+				play('East');
+			
+			elif direction.x > 0.4 && direction.x < 0.6:
+				play('South_East');
+			
+			elif direction.x < 0.5:
+				play('South_East_Lower');
+			elif direction.x > 0.5:
+				play('South_East_Upper');
+	
+	# Horizontal
+	#elif abs(direction.x) > abs(direction.y):
+		#
+		## Left
+		#if direction.x < 0:
+			#print("Left");
+			#
+		## Right
+		#elif direction.x > 0:
+			#print("Right");
+	
+	return;
+	
+	if _turning:
+		return;
+	
+	_turning = true;
+	
 	if abs(direction.x) < 0.3:
 		if direction.y < 0: # North
 			play("North");
@@ -34,16 +129,16 @@ func Animate(direction:Vector2) -> void:
 		elif direction.y > 0: # South
 			play("South");
 			if _debug: $"debug_label".text = "South" + str(direction);
-		return;
+		#return;
 	
-	if abs(direction.y) < 0.3:
+	elif abs(direction.y) < 0.3:
 		if direction.x < 0: # West
 			play("West");
 			if _debug: $"debug_label".text = "West" + str(direction);
 		elif direction.x > 0: # East
 			play("East");
 			if _debug: $"debug_label".text = "East" + str(direction);
-		return;
+		#return;
 	
 	if direction.x > 0: # Right
 		
@@ -52,59 +147,63 @@ func Animate(direction:Vector2) -> void:
 			if abs(direction.x) > _turn_thresh && abs(direction.y) > _turn_thresh:
 				play("North_East");
 				if _debug: $"debug_label".text = "North_East" + str(direction);
-				return;
+				#return;
 			elif abs(direction.x) < abs(direction.y):
 				play("North_East_Upper");
 				if _debug: $"debug_label".text = "North_East_Upper" + str(direction);
-				return;
+				#return;
 			elif abs(direction.x) > abs(direction.y):
 				play("North_East_Lower");
 				if _debug: $"debug_label".text = "North_East_Lower" + str(direction);
-				return;
+				#return;
 				
 		elif direction.y > 0: # South East
 			
 			if abs(direction.x) > _turn_thresh && abs(direction.y) > _turn_thresh:
 				play("South_East");
 				if _debug: $"debug_label".text = "South_East" + str(direction);
-				return;
+				#return;
 			elif abs(direction.x) > abs(direction.y):
 				play("South_East_Upper");
 				if _debug: $"debug_label".text = "South_East_Upper" + str(direction);
-				return;
+				#return;
 			elif abs(direction.x) < abs(direction.y):
 				play("South_East_Lower");
 				if _debug: $"debug_label".text = "South_East_Lower" + str(direction);
-				return;
+				#return;
 	
-	if direction.x < 0: # Left
+	elif direction.x < 0: # Left
 		
 		if direction.y < 0: # North West
 			
 			if abs(direction.x) > _turn_thresh && abs(direction.y) > _turn_thresh:
 				play("North_West");
 				if _debug: $"debug_label".text = "North_West" + str(direction);
-				return;
+				#return;
 			elif abs(direction.x) < abs(direction.y):
 				play("North_West_Upper");
 				if _debug: $"debug_label".text = "North_West_Upper" + str(direction);
-				return;
+				#return;
 			elif abs(direction.x) > abs(direction.y):
 				play("North_West_Lower");
 				if _debug: $"debug_label".text = "North_West_Lower" + str(direction);
-				return;
+				#return;
 			
 		elif direction.y > 0: # South West
 			
 			if abs(direction.x) > _turn_thresh && abs(direction.y) > _turn_thresh:
 				play("South_West");
 				if _debug: $"debug_label".text = "South_West" + str(direction);
-				return;
+				#return;
 			elif abs(direction.x) > abs(direction.y):
 				play("South_West_Upper");
 				if _debug: $"debug_label".text = "South_West_Upper" + str(direction);
-				return;
+				#return;
 			elif abs(direction.x) < abs(direction.y):
 				play("South_West_Lower");
 				if _debug: $"debug_label".text = "South_West_Lower" + str(direction);
-				return;
+				#return;
+				
+	await get_tree().create_timer(.2).timeout;
+	
+	_turning = false;
