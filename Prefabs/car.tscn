@@ -204,7 +204,7 @@ radius = 40.0
 [node name="Car" type="Node2D"]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.4, 0.4)
+scale = Vector2(0.45, 0.45)
 sprite_frames = SubResource("SpriteFrames_40mo6")
 animation = &"North_West_Lower"
 autoplay = "East"

@@ -5,17 +5,18 @@ var _arrow_path_follow:PathFollow2D;
 
 @onready var _car_sprite_scale:Vector2 = $AnimatedSprite2D.scale;
 
-const _speed:float = 200;
+const _speed:float = 300;
 
 var _last_pos:Vector2;
 
 var _move_along_route_tween:Tween;
-var _car_distortion_tween:Tween;
-var _car_wobble_tween:Tween;
+var _bounce_tween:Tween;
+var _tremor_tween:Tween;
+var _driving_wobble_tween:Tween;
 
 signal Mouseover_Car(state:bool);
 signal Arrived;
-signal Crash;
+signal Accident;
 
 
 func _ready() -> void:
@@ -25,15 +26,28 @@ func _ready() -> void:
 	# Connect to Car Area Signals
 	$Area2D.mouse_entered.connect(_SIGNAL_Mouseover_Car.bind(true));
 	$Area2D.mouse_exited.connect(_SIGNAL_Mouseover_Car.bind(false));
+	
+	# Start Engine Animation Loop
+	_Engine_Tremor();
+	# Start Engine Sound Loop
+	AudioMaster.Play_Car_Engine_Idle();
 
 
 func _process(delta: float) -> void:
 	
-	_arrow_path_follow.progress += _speed * delta;
-	self.global_position = _arrow_path_follow.global_position;
+	_arrow_path_follow.progress = _arrow_path_follow.progress + _speed * delta;
 	
-	# Remove Arrow Path Tail
-	#_arrow_path.Remove_Points_Around_Position(self.global_position);
+	# If the End of the path is Reached Before Arriving at an end point,
+	# Restart.
+	if _arrow_path_follow.progress_ratio >= 1:
+		self.set_process(false);
+		_Play_Accident_Animation();
+		# Sound
+		AudioMaster.Play_Tyre_Screech();
+		Accident.emit();
+	
+	# Position the car at the 'head' of the Arrow's PathFollow object.
+	self.global_position = _arrow_path_follow.global_position;
 	
 	var direction:Vector2 = self.global_position - _last_pos;
 	direction = direction.normalized();
@@ -77,7 +91,7 @@ func _SIGNAL_Mouseover_Car(state:bool) -> void:
 	Mouseover_Car.emit(state);
 	if state == true:
 		_Car_Bounce();
-		AudioMaster.Play_CarHorn();
+		AudioMaster.Play_Car_Horn();
 
 
 func _SIGNAL_Start_Driving() -> void:
@@ -88,9 +102,21 @@ func _SIGNAL_Start_Driving() -> void:
 
 
 func _SIGNAL_Crash(_area:Area2D) -> void:
-	Crash.emit();
-	self.modulate = Color.RED;
+	
+	# Stop Movement Operations
 	set_process(false);
+	
+	_Play_Accident_Animation();
+	# Sound
+	AudioMaster.Play_Metal_Bang();
+	
+	Accident.emit();
+
+
+func _Play_Accident_Animation() -> void:
+	# Crash Animation
+	_tremor_tween.kill();
+	_Car_Bounce();
 
 
 func Connect_To_Arrow(arrow:Line2D) -> void:
@@ -131,41 +157,41 @@ func Move_Car_Along_Route(points:Array[Vector2]) -> void:
 
 
 func _Car_Bounce() -> void:
-	if _car_distortion_tween != null:
-		_car_distortion_tween.kill();
-	_car_distortion_tween = create_tween();
-	_car_distortion_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.2, .8), .05);
-	_car_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.8, 1.2), .05);
-	_car_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .05);
-	_car_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .05);
+	if _bounce_tween != null:
+		_bounce_tween.kill();
+	_bounce_tween = create_tween();
+	_bounce_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.2, .8), .05);
+	_bounce_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.8, 1.2), .05);
+	_bounce_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .05);
+	_bounce_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .05);
 
 
 func _Engine_Tremor() -> void:
-	if _car_distortion_tween != null:
-		_car_distortion_tween.kill();
-	_car_distortion_tween = create_tween();
-	_car_distortion_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.975, 1.025), .05);
-	_car_distortion_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1, 1), .05);
+	if _tremor_tween != null:
+		_tremor_tween.kill();
+	_tremor_tween = create_tween();
+	_tremor_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.975, 1.025), .05);
+	_tremor_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1, 1), .05);
 	# Repeat the Tremor
-	await _car_distortion_tween.finished;
+	await _tremor_tween.finished;
 	_Engine_Tremor();
 
 
 func _Wobble_Car_While_Driving() -> void:
 	
-	if _car_wobble_tween != null:
-		_car_wobble_tween.kill();
+	if _driving_wobble_tween != null:
+		_driving_wobble_tween.kill();
 		
-	_car_wobble_tween = create_tween();
-	_car_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .1);
-	_car_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .1);
+	_driving_wobble_tween = create_tween();
+	_driving_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .1);
+	_driving_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .1);
 	
-	await _car_wobble_tween.finished;
+	await _driving_wobble_tween.finished;
 	
 	if is_processing():
 		_Wobble_Car_While_Driving();
 	else:
-		_car_wobble_tween.kill();
-		_car_wobble_tween = create_tween();
-		_car_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .2);
-		_car_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .3);
+		_driving_wobble_tween.kill();
+		_driving_wobble_tween = create_tween();
+		_driving_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .2);
+		_driving_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .3);
