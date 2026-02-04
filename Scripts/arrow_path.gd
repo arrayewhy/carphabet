@@ -31,6 +31,8 @@ func _process(_delta: float) -> void:
 		# Update Arrow Line
 		$"..".points = self.curve.get_baked_points();
 		_last_mouse_pos = curr_mouse_pos;
+		# Sound
+		AudioMaster.Play_Stone_Clack();
 
 
 func _input(event: InputEvent) -> void:
