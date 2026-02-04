@@ -1,0 +1,122 @@
+[gd_scene load_steps=8 format=3 uid="uid://b7kp4f2k8fgle"]
+
+[ext_resource type="Script" uid="uid://bo7dai4h7f30p" path="res://Scripts/base.gd" id="1_i0w7e"]
+[ext_resource type="Script" uid="uid://b87bvmpwsmd84" path="res://Scripts/crash_zones.gd" id="2_5mrd4"]
+[ext_resource type="Script" uid="uid://cl3m1rn1mllfl" path="res://Scripts/route.gd" id="3_r8v4r"]
+[ext_resource type="Texture2D" uid="uid://dbhtwmpp4oxws" path="res://Sprites/maps/b_cap/map_b_cap.png" id="4_1i501"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_2suvu"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nbbd5"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_r4bvq"]
+
+[node name="Base" type="Node2D"]
+script = ExtResource("1_i0w7e")
+_curr_scene = 2
+
+[node name="BG_Colour" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="BG_Colour"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.78039217, 0.78039217, 0.78039217, 1)
+
+[node name="Crash_Zones" type="Area2D" parent="."]
+visible = false
+top_level = true
+script = ExtResource("2_5mrd4")
+_changes = Dictionary[int, Array]({
+0: [NodePath("CollisionPolygon2D4")]
+})
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zones"]
+polygon = PackedVector2Array(-32, 1109, 552, 1099, 562, -25, -30, -25)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Crash_Zones"]
+polygon = PackedVector2Array(857, 34, 1204, 37, 1401, 113, 1479, 227, 1470, 379, 1417, 452, 1493, 538, 1496, 741, 1420, 847, 1232, 942, 832, 957, 832, 1113, 1941, 1109, 1947, -28, 851, -30)
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Crash_Zones"]
+polygon = PackedVector2Array(835, 296, 833, 693, 1123, 686, 1147, 654, 1105, 617, 924, 606, 929, 365, 1077, 363, 1125, 333, 1073, 289)
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Crash_Zones"]
+polygon = PackedVector2Array(593, -24, 580, 689, 801, 691, 806, -24)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(958, 540)
+zoom = Vector2(0.9, 0.9)
+
+[node name="Start_Routes" type="Node2D" parent="."]
+
+[node name="Route" type="Node2D" parent="Start_Routes"]
+script = ExtResource("3_r8v4r")
+
+[node name="Point0" type="Sprite2D" parent="Start_Routes/Route"]
+position = Vector2(701.49896, -206.6814)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_2suvu")
+
+[node name="Point1" type="Sprite2D" parent="Start_Routes/Route"]
+position = Vector2(708.6318, 365.36862)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_nbbd5")
+
+[node name="Route2" type="Node2D" parent="Start_Routes"]
+script = ExtResource("3_r8v4r")
+
+[node name="Point0" type="Sprite2D" parent="Start_Routes/Route2"]
+position = Vector2(699.22644, -149.82874)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_2suvu")
+
+[node name="Point1" type="Sprite2D" parent="Start_Routes/Route2"]
+position = Vector2(710, 164)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_2suvu")
+
+[node name="Point2" type="Sprite2D" parent="Start_Routes/Route2"]
+position = Vector2(933, 164)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_2suvu")
+
+[node name="End_Routes" type="Node2D" parent="."]
+visible = false
+
+[node name="Route" type="Node2D" parent="End_Routes"]
+script = ExtResource("3_r8v4r")
+
+[node name="Point0" type="Sprite2D" parent="End_Routes/Route"]
+position = Vector2(698, 938)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Point1" type="Sprite2D" parent="End_Routes/Route"]
+position = Vector2(698, 1223)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Route2" type="Node2D" parent="End_Routes"]
+script = ExtResource("3_r8v4r")
+
+[node name="Point0" type="Sprite2D" parent="End_Routes/Route2"]
+position = Vector2(913, 807)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Point1" type="Sprite2D" parent="End_Routes/Route2"]
+position = Vector2(-333, 807)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Environment" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(962, 534)
+texture = ExtResource("4_1i501")
