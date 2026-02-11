@@ -7,39 +7,33 @@ const _arrow_prefab:PackedScene = preload("res://Prefabs/arrow.tscn");
 
 var _cars:Array[Node2D];
 var _curr_car_idx:int;
-var _curr_arrow:Line2D;
+var _curr_arrow:Node2D;
 
 signal Activate_Car;
+
+@export_category("Debug")
+@export var _loop_scene:bool;
 
 
 # Functions: Built-in ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
 func _ready() -> void:
-	
+	print_debug(Globals.CURRENT_SCENE_TYPE)
 	Globals.CURRENT_SCENE_TYPE = _curr_scene;
-	
-	_curr_car_idx = 0;
 	
 	_curr_arrow = _arrow_prefab.instantiate();
 	self.add_child(_curr_arrow);
 	
+	_curr_car_idx = 0;
 	# Spawn New Car and run its Configurations
 	var car:Node2D = _Create_And_Connect_Car();
 	_cars.push_back(car);
-	
 	$"Environment".add_child(car);
-	
+	# Move it to the End of the Start Route
 	car.Move_Car_Along_Route(_Get_Start_Route());
 	
 	Curtain.Reveal();
-	
-	# Create the Car Holder
-	#var car_holder:Node2D = Node2D.new();
-	#car_holder.name = "Car_Holder";
-	#car_holder.add_child(car);
-	#
-	#self.add_child(car_holder);
 
 
 # Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -61,7 +55,12 @@ func _SIGNAL_Check_Next_Step() -> void:
 		# the Curtain Fades out Faster.
 		await AudioMaster.Silenced;
 		
-		_curr_arrow.get_child(0).Reset();
+		_curr_arrow.Reset();
+		
+		# DEBUG
+		if _loop_scene:
+			Globals._Reload_Current_Scene();
+			return;
 		
 		Globals.Progress_To_Next_Scene();
 		
@@ -70,16 +69,18 @@ func _SIGNAL_Check_Next_Step() -> void:
 		# Spawn a new Arrow to draw with so we Don't Disturb the previous one.
 		# Do this Before spawning the Car because the car has to connect to it.
 		_curr_arrow = _arrow_prefab.instantiate();
-		# TEMPORARY
-		# Instantiated objects seem to Retain Data
-		# from previous instantiated copies, so we Force a Reset here.
-		_curr_arrow.get_child(0).Reset();
+		
 		self.add_child(_curr_arrow);
+		# TEMPORARY
+		# 1. Instantiated objects seem to Retain Data
+		# from previous instantiated copies, so we Force a Reset here.
+		# 2. We call Reset() after Parenting the arrow
+		# because _ready() is fired After an object is Parented.
+		_curr_arrow.Reset();
 		
 		# Prepare Next Car
 		var car:Node2D = _Create_And_Connect_Car();
 		_cars.push_back(car);
-		
 		$"Environment".add_child(car);
 		
 		Activate_Car.emit(_curr_car_idx);
@@ -99,7 +100,7 @@ func _SIGNAL_Restart() -> void:
 	# the Curtain Fades out Faster.
 	await AudioMaster.Silenced;
 	
-	_curr_arrow.get_child(0).Reset();
+	_curr_arrow.Reset();
 	
 	Globals._Reload_Current_Scene();
 
@@ -109,12 +110,12 @@ func _SIGNAL_Restart() -> void:
 
 func _Create_And_Connect_Car() -> Node2D:
 	var car:Node2D = _car_prefab.instantiate();
+	car.name = str("Car", _curr_car_idx);
 	car.set_script(load("res://Scripts/car.gd"));
-	car.Connect_To_Arrow(_curr_arrow);
-	#car.Move_Car_Along_Route(_Get_Start_Route());
 	car.Arrived.connect(_SIGNAL_Check_Next_Step);
 	car.Accident.connect(_SIGNAL_Restart);
-	_curr_arrow.get_child(0).Connect_To_Car(car);
+	car.Connect_To_Arrow(_curr_arrow);
+	_curr_arrow.Connect_To_Car(car);
 	return car;
 
 

@@ -3,11 +3,10 @@
 [ext_resource type="Script" uid="uid://bo7dai4h7f30p" path="res://Scripts/base.gd" id="1_i0w7e"]
 [ext_resource type="Script" uid="uid://b87bvmpwsmd84" path="res://Scripts/crash_zones.gd" id="2_5mrd4"]
 [ext_resource type="Script" uid="uid://cl3m1rn1mllfl" path="res://Scripts/route.gd" id="3_r8v4r"]
-[ext_resource type="Texture2D" uid="uid://dbhtwmpp4oxws" path="res://Sprites/maps/b_cap/map_b_cap.png" id="4_1i501"]
+[ext_resource type="Texture2D" uid="uid://bxiy3q12c5xbf" path="res://Sprites/maps/map_assets.png" id="4_agle4"]
+[ext_resource type="Texture2D" uid="uid://vetiv4syaukq" path="res://Sprites/maps/b_cap/map_b_cap.png" id="5_15w74"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_2suvu"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nbbd5"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_r4bvq"]
 
@@ -36,51 +35,55 @@ _changes = Dictionary[int, Array]({
 })
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(-32, 1109, 552, 1099, 562, -25, -30, -25)
+position = Vector2(-156.79999, -5.0999756)
+polygon = PackedVector2Array(-32, 1109, 533.8, 1122.1, 528.8, -36.900024, -30, -25)
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(857, 34, 1204, 37, 1401, 113, 1479, 227, 1470, 379, 1417, 452, 1493, 538, 1496, 741, 1420, 847, 1232, 942, 832, 957, 832, 1113, 1941, 1109, 1947, -28, 851, -30)
+polygon = PackedVector2Array(426, 107, 1056, 113, 1232, 193, 1287, 339, 1278, 446, 1235, 493, 1307, 563, 1347, 678, 1322, 844, 1242, 913, 1096, 957, 829, 982, 424, 979, 423, 1100, 1956, 1099, 1957, -17, 418, -38)
 
 [node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(835, 296, 833, 693, 1123, 686, 1147, 654, 1105, 617, 924, 606, 929, 365, 1077, 363, 1125, 333, 1073, 289)
+polygon = PackedVector2Array(604, 327, 971, 326, 1022, 359, 981, 391, 653, 395, 658, 633, 1014, 635, 1073, 680, 1013, 719, 607, 727)
 
 [node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Crash_Zones"]
-polygon = PackedVector2Array(593, -24, 580, 689, 801, 691, 806, -24)
+position = Vector2(1, 1)
+polygon = PackedVector2Array(421, 333, 557, 329, 566, 729, 421, 727)
+disabled = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(958, 540)
+position = Vector2(902, 540)
 zoom = Vector2(0.9, 0.9)
 
 [node name="Start_Routes" type="Node2D" parent="."]
+visible = false
 
 [node name="Route" type="Node2D" parent="Start_Routes"]
 script = ExtResource("3_r8v4r")
 
 [node name="Point0" type="Sprite2D" parent="Start_Routes/Route"]
-position = Vector2(701.49896, -206.6814)
+position = Vector2(-106, 220)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="Point1" type="Sprite2D" parent="Start_Routes/Route"]
-position = Vector2(708.6318, 365.36862)
+position = Vector2(487, 220)
 scale = Vector2(32, 32)
-texture = SubResource("PlaceholderTexture2D_nbbd5")
+texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="Route2" type="Node2D" parent="Start_Routes"]
 script = ExtResource("3_r8v4r")
 
 [node name="Point0" type="Sprite2D" parent="Start_Routes/Route2"]
-position = Vector2(699.22644, -149.82874)
+position = Vector2(516, -183)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="Point1" type="Sprite2D" parent="Start_Routes/Route2"]
-position = Vector2(710, 164)
+position = Vector2(516, 220)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="Point2" type="Sprite2D" parent="Start_Routes/Route2"]
-position = Vector2(933, 164)
+position = Vector2(571, 220)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
@@ -91,12 +94,17 @@ visible = false
 script = ExtResource("3_r8v4r")
 
 [node name="Point0" type="Sprite2D" parent="End_Routes/Route"]
-position = Vector2(698, 938)
+position = Vector2(506, 863)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_r4bvq")
 
 [node name="Point1" type="Sprite2D" parent="End_Routes/Route"]
-position = Vector2(698, 1223)
+position = Vector2(506, 1156)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Point2" type="Sprite2D" parent="End_Routes/Route"]
+position = Vector2(694, 1156)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_r4bvq")
 
@@ -104,19 +112,131 @@ texture = SubResource("PlaceholderTexture2D_r4bvq")
 script = ExtResource("3_r8v4r")
 
 [node name="Point0" type="Sprite2D" parent="End_Routes/Route2"]
-position = Vector2(913, 807)
+position = Vector2(564, 858)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_r4bvq")
 
 [node name="Point1" type="Sprite2D" parent="End_Routes/Route2"]
-position = Vector2(-333, 807)
+position = Vector2(-436, 858)
 scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_r4bvq")
 
 [node name="Environment" type="Node2D" parent="."]
 y_sort_enabled = true
 
+[node name="House_Left" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(-49, 715)
+texture = ExtResource("4_agle4")
+offset = Vector2(0, -234.1)
+region_enabled = true
+region_rect = Rect2(1600.7478, 13.452469, 442.2334, 595.2641)
+
+[node name="Lamp" type="Sprite2D" parent="Environment"]
+position = Vector2(1339, 1161)
+texture = ExtResource("4_agle4")
+offset = Vector2(-52.68, -163.92)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(11.001282, 5.317566, 162.5686, 470.20697)
+
+[node name="Tree" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(197, 1431)
+texture = ExtResource("4_agle4")
+offset = Vector2(-20.24, -353.48)
+region_enabled = true
+region_rect = Rect2(1443.347, 1197.2401, 597.15967, 825.0936)
+
+[node name="Tree2" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(-96, 304)
+texture = ExtResource("4_agle4")
+offset = Vector2(-20.24, -353.48)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(1444.3812, 1197.2401, 596.1255, 825.0936)
+
+[node name="Tree3" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(2124, 992)
+texture = ExtResource("4_agle4")
+offset = Vector2(-20.24, -353.48)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(1451.591, 1197.2401, 588.9158, 825.0936)
+
+[node name="House_Slant" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(358, 1503)
+texture = ExtResource("4_agle4")
+offset = Vector2(0, -410.66)
+region_enabled = true
+region_rect = Rect2(1488.331, 603.6858, 540.2809, 593.79126)
+
+[node name="Arch" type="Sprite2D" parent="Environment"]
+position = Vector2(275, 134.41998)
+texture = ExtResource("4_agle4")
+offset = Vector2(0, -65.39)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(2.5003052, 985, 248.50012, 490.50024)
+
+[node name="Arch2" type="Sprite2D" parent="Environment"]
+position = Vector2(249, 279.41998)
+texture = ExtResource("4_agle4")
+offset = Vector2(0, -215.42)
+flip_h = true
+region_enabled = true
+region_rect = Rect2(5.5005493, 483.9996, 208.50012, 490.5002)
+
+[node name="House_Top" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(885, 55)
+texture = ExtResource("4_agle4")
+offset = Vector2(0, -190.32)
+region_enabled = true
+region_rect = Rect2(885.7139, 1563.8474, 548.89435, 481.83484)
+
+[node name="Bush" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(1148, 1012)
+texture = ExtResource("4_agle4")
+offset = Vector2(-4.48, -71.15)
+region_enabled = true
+region_rect = Rect2(1109.0298, 1344.882, 265.69214, 209.68518)
+
+[node name="Rock" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(372, 296.00003)
+scale = Vector2(0.45345742, 0.45345742)
+texture = ExtResource("4_agle4")
+offset = Vector2(0, -52.98)
+region_enabled = true
+region_rect = Rect2(6.231964, 1864.6348, 217.13803, 180.24158)
+
+[node name="Leaning_House_Top" type="Sprite2D" parent="Environment"]
+position = Vector2(527, 29)
+texture = ExtResource("4_agle4")
+offset = Vector2(0, -330.27)
+region_enabled = true
+region_rect = Rect2(709.086, 621.226, 359.828, 716.255)
+
+[node name="Leaning_House_Base" type="Sprite2D" parent="Environment"]
+position = Vector2(527, -153)
+texture = ExtResource("4_agle4")
+offset = Vector2(0, -148.07)
+region_enabled = true
+region_rect = Rect2(1073.136, 621.226, 359.828, 716.255)
+
+[node name="Lamp2" type="Sprite2D" parent="Environment"]
+position = Vector2(263, 526)
+texture = ExtResource("4_agle4")
+offset = Vector2(54.66, -219.67)
+region_enabled = true
+region_rect = Rect2(8.1189575, 9.072952, 169.1842, 470.659)
+
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -2
 position = Vector2(962, 534)
-texture = ExtResource("4_1i501")
+texture = ExtResource("5_15w74")

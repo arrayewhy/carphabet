@@ -1,11 +1,10 @@
-[gd_scene load_steps=21 format=3 uid="uid://d1nt6c4nqeu2g"]
+[gd_scene load_steps=22 format=3 uid="uid://d1nt6c4nqeu2g"]
 
+[ext_resource type="Texture2D" uid="uid://bvoft4x3g7wd2" path="res://Sprites/cars/Car-12.png" id="1_nkp2k"]
 [ext_resource type="Texture2D" uid="uid://byqi7isjdngk3" path="res://Sprites/car_spritesheet.png" id="2_guknt"]
+[ext_resource type="Texture2D" uid="uid://csgqx60uo18iy" path="res://Sprites/cars/Car-13.png" id="3_3a71y"]
 [ext_resource type="Script" uid="uid://g46iqy0kyxuh" path="res://Scripts/car_anim.gd" id="3_guknt"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lmfi0"]
-atlas = ExtResource("2_guknt")
-region = Rect2(4320, 0, 1080, 1080)
+[ext_resource type="Texture2D" uid="uid://bqpx0s7ytjbov" path="res://Sprites/cars/Car-8.png" id="4_8ro6x"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_guknt"]
 atlas = ExtResource("2_guknt")
@@ -14,10 +13,6 @@ region = Rect2(0, 1080, 1080, 1080)
 [sub_resource type="AtlasTexture" id="AtlasTexture_g7icc"]
 atlas = ExtResource("2_guknt")
 region = Rect2(6480, 0, 1080, 1080)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lduiy"]
-atlas = ExtResource("2_guknt")
-region = Rect2(5400, 0, 1080, 1080)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nkp2k"]
 atlas = ExtResource("2_guknt")
@@ -35,9 +30,9 @@ region = Rect2(3240, 1080, 1080, 1080)
 atlas = ExtResource("2_guknt")
 region = Rect2(1080, 1080, 1080, 1080)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_acnkq"]
-atlas = ExtResource("2_guknt")
-region = Rect2(0, 0, 1080, 1080)
+[sub_resource type="AtlasTexture" id="AtlasTexture_ejaum"]
+atlas = ExtResource("4_8ro6x")
+region = Rect2(0, 0, 1024, 1024)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vp416"]
 atlas = ExtResource("2_guknt")
@@ -47,7 +42,7 @@ region = Rect2(2160, 0, 1080, 1080)
 atlas = ExtResource("2_guknt")
 region = Rect2(1080, 0, 1080, 1080)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ejaum"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_lduiy"]
 atlas = ExtResource("2_guknt")
 region = Rect2(3240, 0, 1080, 1080)
 
@@ -71,7 +66,7 @@ region = Rect2(4320, 1080, 1080, 1080)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lmfi0")
+"texture": ExtResource("1_nkp2k")
 }],
 "loop": true,
 "name": &"East",
@@ -95,7 +90,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lduiy")
+"texture": ExtResource("3_3a71y")
 }],
 "loop": true,
 "name": &"North_East_Lower",
@@ -135,7 +130,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_acnkq")
+"texture": SubResource("AtlasTexture_ejaum")
 }],
 "loop": true,
 "name": &"South",
@@ -159,7 +154,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ejaum")
+"texture": SubResource("AtlasTexture_lduiy")
 }],
 "loop": true,
 "name": &"South_East_Upper",
@@ -212,7 +207,9 @@ offset = Vector2(0, -128)
 script = ExtResource("3_guknt")
 
 [node name="Area2D" type="Area2D" parent="."]
-collision_mask = 9
+collision_layer = 16
+monitoring = false
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CircleShape2D_7ov2f")

@@ -1,0 +1,126 @@
+[gd_scene load_steps=9 format=3 uid="uid://3lt2fdmijfii"]
+
+[ext_resource type="Script" uid="uid://bo7dai4h7f30p" path="res://Scripts/base.gd" id="1_fq8u5"]
+[ext_resource type="Script" uid="uid://b87bvmpwsmd84" path="res://Scripts/crash_zones.gd" id="2_lwhck"]
+[ext_resource type="Script" uid="uid://cl3m1rn1mllfl" path="res://Scripts/route.gd" id="3_812ke"]
+[ext_resource type="Texture2D" uid="uid://cf0l2fpqi31vp" path="res://Sprites/maps/c_cap/map_c_cap.png" id="4_4s33i"]
+[ext_resource type="Texture2D" uid="uid://bxiy3q12c5xbf" path="res://Sprites/maps/map_assets.png" id="4_uycqv"]
+[ext_resource type="PackedScene" uid="uid://cb2ncbheesynt" path="res://Prefabs/shy_grass.tscn" id="6_lwhck"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_2suvu"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_r4bvq"]
+
+[node name="Base" type="Node2D"]
+script = ExtResource("1_fq8u5")
+_curr_scene = 3
+
+[node name="BG_Colour" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="BG_Colour"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.78039217, 0.78039217, 0.78039217, 1)
+
+[node name="Crash_Zones" type="Area2D" parent="."]
+visible = false
+top_level = true
+script = ExtResource("2_lwhck")
+_changes = Dictionary[int, Array]({
+0: [NodePath("")]
+})
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zones"]
+position = Vector2(-156.79999, -5.0999756)
+polygon = PackedVector2Array(109.79999, -51.900024, 109.79999, 1138.1, 2107.8, 1139.1, 2101.8, 978.1, 1284.8, 983.1, 996.8, 985.1, 801.8, 951.1, 597.8, 896.1, 481.8, 802.1, 423.8, 651.1, 434.8, 467.09998, 502.8, 339.09998, 587.8, 232.09998, 719.8, 164.09998, 878.8, 106.099976, 1145.8, 98.099976, 2151.8, 101.099976, 2150.8, -52.900024)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zones/CollisionPolygon2D"]
+polygon = PackedVector2Array(2145.8, 334.09998, 1068.8, 329.09998, 841.8, 365.09998, 719.8, 441.09998, 680.8, 577.1, 738.8, 690.1, 865.8, 752.1, 1161.8, 763.1, 2169.8, 741.1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(902, 540)
+zoom = Vector2(0.9, 0.9)
+
+[node name="Start_Routes" type="Node2D" parent="."]
+visible = false
+
+[node name="Route" type="Node2D" parent="Start_Routes"]
+script = ExtResource("3_812ke")
+
+[node name="Point0" type="Sprite2D" parent="Start_Routes/Route"]
+position = Vector2(2218, 216)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_2suvu")
+
+[node name="Point1" type="Sprite2D" parent="Start_Routes/Route"]
+position = Vector2(1269, 216)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_2suvu")
+
+[node name="End_Routes" type="Node2D" parent="."]
+
+[node name="Route" type="Node2D" parent="End_Routes"]
+script = ExtResource("3_812ke")
+
+[node name="Point0" type="Sprite2D" parent="End_Routes/Route"]
+position = Vector2(1224, 863)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Point1" type="Sprite2D" parent="End_Routes/Route"]
+position = Vector2(2162, 863)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Environment" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Shy_Grass" parent="Environment" instance=ExtResource("6_lwhck")]
+position = Vector2(270, 440)
+scale = Vector2(-1, 1)
+
+[node name="Shy_Grass2" parent="Environment" instance=ExtResource("6_lwhck")]
+position = Vector2(639, 736)
+
+[node name="House" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(1533, 387.37)
+texture = ExtResource("4_uycqv")
+offset = Vector2(0, -200.28)
+region_enabled = true
+region_rect = Rect2(434.8292, 1342.1455, 452.5402, 702.7683)
+
+[node name="Garden" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(1947, 489)
+texture = ExtResource("4_uycqv")
+offset = Vector2(0, -3.93)
+region_enabled = true
+region_rect = Rect2(1221.4624, 44.59902, 376.67322, 547.7067)
+
+[node name="House_BtmR" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(1904.0001, 1135)
+rotation = 0.31129372
+scale = Vector2(1.6621605, 1.6621605)
+texture = ExtResource("4_uycqv")
+region_enabled = true
+region_rect = Rect2(1504.5569, 611.33307, 525.0797, 582.3127)
+
+[node name="Tree" type="Sprite2D" parent="Environment"]
+modulate = Color(0.84, 0.84, 0.84, 1)
+position = Vector2(1405, 1050)
+texture = ExtResource("4_uycqv")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(1452.3962, 1206.334, 578.1035, 814.91846)
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(962, 534)
+texture = ExtResource("4_4s33i")

@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://cb2ncbheesynt"]
+
+[ext_resource type="Script" uid="uid://bxxgd4lnspsfd" path="res://Scripts/touch_obstacle.gd" id="1_5fyjs"]
+[ext_resource type="Texture2D" uid="uid://4hslukk2tpa7" path="res://Sprites/maps/a_cap/map_a_cap5.png" id="2_ll7a2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r4bvq"]
+radius = 103.54
+
+[node name="Shy_Grass" type="Node2D"]
+script = ExtResource("1_5fyjs")
+_touch_sounds = Array[int]([2])
+_col_sounds = Array[int]([3, 1])
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-85, -12)
+scale = Vector2(0.7986623, 0.7986623)
+texture = ExtResource("2_ll7a2")
+region_enabled = true
+region_rect = Rect2(2999.2397, 49.946106, 248.9331, 222.4028)
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-53, -95)
+scale = Vector2(0.7986623, 0.7986623)
+texture = ExtResource("2_ll7a2")
+region_enabled = true
+region_rect = Rect2(3299.3528, 27.65632, 158.00366, 262.25708)
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(14, 4)
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-101, -54)
+shape = SubResource("CircleShape2D_r4bvq")
