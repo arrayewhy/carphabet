@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ck00fohhmpcr"
-path="res://.godot/imported/map_a_cap2.png-6d24cbb2afdb269e9a2290ade53c291f.ctex"
+uid="uid://cf0l2fpqi31vp"
+path="res://.godot/imported/map_c_cap.png-b61c2322bfb0617387aa6248e7cc5a46.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/maps/map_a_cap2.png"
-dest_files=["res://.godot/imported/map_a_cap2.png-6d24cbb2afdb269e9a2290ade53c291f.ctex"]
+source_file="res://Sprites/maps/c_cap/map_c_cap.png"
+dest_files=["res://.godot/imported/map_c_cap.png-b61c2322bfb0617387aa6248e7cc5a46.ctex"]
 
 [params]
 
