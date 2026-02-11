@@ -9,6 +9,8 @@ var _last_dir:Vector2 = Vector2.INF;
 var _lines:Array[Line2D];
 var _curr_line_idx:int;
 
+var _completed:bool;
+
 signal Path_Complete;
 
 
@@ -37,7 +39,7 @@ func _process(_delta: float) -> void:
 		#return;
 	
 	if curr_mouse_pos.distance_to(_last_mouse_pos) > _mouse_move_thresh:
-		$"../Debug_Sprite".global_position = curr_mouse_pos;
+		if $"../Debug_Sprite" != null: $"../Debug_Sprite".global_position = curr_mouse_pos;
 		self.curve.add_point(curr_mouse_pos);
 		# Update Arrow Head Rotation
 		var direction = _last_mouse_pos.direction_to(curr_mouse_pos);
@@ -67,7 +69,11 @@ func _process(_delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	
-	if event.is_action_pressed("Click") && _can_draw:
+	if _completed:
+		return;
+	
+	#if event.is_action_pressed("Click") && _can_draw:
+	if event.is_action("Click") && $"..".Get_Curr_Car().global_position.distance_to(get_global_mouse_position()) <= 50:
 		
 		_last_mouse_pos = get_global_mouse_position();
 		self.curve.add_point(_last_mouse_pos);
@@ -91,14 +97,16 @@ func _input(event: InputEvent) -> void:
 		Path_Complete.emit();
 		Tools.Disconnect_Callables(Path_Complete);
 		
-		$"..".Get_Curr_Car().Mouseover_Car.disconnect(_SIGNAL_Set_Can_Draw);
+		_completed = true;
+		
+		#$"..".Get_Curr_Car().Mouseover_Car.disconnect(_SIGNAL_Set_Can_Draw);
 
 
 # Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func _SIGNAL_Set_Can_Draw(state:bool) -> void:
-	_can_draw = state;
+#func _SIGNAL_Set_Can_Draw(state:bool) -> void:
+	#_can_draw = state;
 
 
 func _SIGNAL_Reset_Arrow() -> void:
@@ -114,8 +122,8 @@ func Reset() -> void:
 	$Arrow_Head.hide();
 
 
-func Connect_To_Car(car:Node2D) -> void:
-	car.Mouseover_Car.connect(_SIGNAL_Set_Can_Draw);
+#func Connect_To_Car(car:Node2D) -> void:
+	#car.Mouseover_Car.connect(_SIGNAL_Set_Can_Draw);
 
 
 # Functions: Get Set ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||

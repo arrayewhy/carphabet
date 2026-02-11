@@ -19,7 +19,7 @@ signal Activate_Car;
 
 
 func _ready() -> void:
-	print_debug(Globals.CURRENT_SCENE_TYPE)
+	
 	Globals.CURRENT_SCENE_TYPE = _curr_scene;
 	
 	_curr_arrow = _arrow_prefab.instantiate();
@@ -115,7 +115,7 @@ func _Create_And_Connect_Car() -> Node2D:
 	car.Arrived.connect(_SIGNAL_Check_Next_Step);
 	car.Accident.connect(_SIGNAL_Restart);
 	car.Connect_To_Arrow(_curr_arrow);
-	_curr_arrow.Connect_To_Car(car);
+	#_curr_arrow.Connect_To_Car(car);
 	return car;
 
 

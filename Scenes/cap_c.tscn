@@ -63,6 +63,7 @@ scale = Vector2(32, 32)
 texture = SubResource("PlaceholderTexture2D_2suvu")
 
 [node name="End_Routes" type="Node2D" parent="."]
+visible = false
 
 [node name="Route" type="Node2D" parent="End_Routes"]
 script = ExtResource("3_812ke")

@@ -24,7 +24,7 @@ signal Accident;
 
 func _init() -> void:
 	assert(!$Area2D.monitoring, "Car is Monitoring on Start!");
-	assert(!$Area2D.monitorable, "Car is Mmonitorableonitorable on Start!");
+	assert(!$Area2D.monitorable, "Car is Monitorable on Start!");
 
 
 func _ready() -> void:
