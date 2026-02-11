@@ -37,6 +37,7 @@ func _process(_delta: float) -> void:
 		#return;
 	
 	if curr_mouse_pos.distance_to(_last_mouse_pos) > _mouse_move_thresh:
+		$"../Debug_Sprite".global_position = curr_mouse_pos;
 		self.curve.add_point(curr_mouse_pos);
 		# Update Arrow Head Rotation
 		var direction = _last_mouse_pos.direction_to(curr_mouse_pos);
@@ -72,7 +73,7 @@ func _input(event: InputEvent) -> void:
 		self.curve.add_point(_last_mouse_pos);
 		
 		set_process(true);
-		
+		$"..".Get_Curr_Car().modulate = Color.GREEN;
 		return;
 	
 	if event.is_action_released("Click") && is_processing():
@@ -80,7 +81,7 @@ func _input(event: InputEvent) -> void:
 		_can_draw = false;
 		
 		set_process(false);
-		
+		$"..".Get_Curr_Car().modulate = Color.RED;
 		# If the Path is too Short,
 		# Reset it and wait to draw again.
 		if self.curve.point_count <= 5:
