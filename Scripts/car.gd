@@ -19,6 +19,14 @@ signal Arrived;
 signal Accident;
 
 
+# Functions: Built-in ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+func _init() -> void:
+	assert(!$Area2D.monitoring, "Car is Monitoring on Start!");
+	assert(!$Area2D.monitorable, "Car is Mmonitorableonitorable on Start!");
+
+
 func _ready() -> void:
 	
 	set_process(false);
@@ -64,6 +72,8 @@ func _process(delta: float) -> void:
 		# We Disable Crash Detection here so that
 		# the car does not crash into anything on its End Route.
 		$Area2D.area_entered.disconnect(_SIGNAL_Crash);
+		$Area2D.monitoring = false;
+		$Area2D.monitorable = false;
 		
 		set_process(false);
 		
@@ -88,6 +98,9 @@ func _process(delta: float) -> void:
 		_arrow_path_follow.progress = 0;
 
 
+# Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
 func _SIGNAL_Mouseover_Car(state:bool) -> void:
 	Mouseover_Car.emit(state);
 	if state == true:
@@ -100,29 +113,23 @@ func _SIGNAL_Start_Driving() -> void:
 	_Wobble_Car_While_Driving();
 	# Connect to detect crash zones here, after the car has been spawned to avoid colliding on spawn
 	$Area2D.area_entered.connect(_SIGNAL_Crash);
+	$Area2D.monitoring = true;
+	$Area2D.monitorable = true;
 
 
 func _SIGNAL_Crash(_area:Area2D) -> void:
-	
 	# Stop Movement Operations
 	set_process(false);
-	
 	_Play_Accident_Animation();
-	# Sound
-	AudioMaster.Play_Metal_Bang();
-	
 	Accident.emit();
 
 
-func _Play_Accident_Animation() -> void:
-	# Crash Animation
-	_tremor_tween.kill();
-	_Car_Bounce();
+# Functions ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
-func Connect_To_Arrow(arrow:Line2D) -> void:
-	_arrow_path = arrow.get_child(0);
-	_arrow_path_follow = _arrow_path.get_child(0);
+func Connect_To_Arrow(arrow:Path2D) -> void:
+	_arrow_path = arrow;
+	_arrow_path_follow = arrow.Get_PathFollow();
 	_arrow_path.Path_Complete.connect(_SIGNAL_Start_Driving);
 
 
@@ -139,10 +146,7 @@ func Move_Car_Along_Route(points:Array[Vector2]) -> void:
 		var curr_point:Vector2 = points[i + 1];
 		var duration:float = self.global_position.distance_to(curr_point) / (_speed * 2);
 		
-		if i == 0:
-			_move_along_route_tween.tween_property(self, "global_position", curr_point, duration);
-		else:
-			_move_along_route_tween.tween_property(self, "global_position", curr_point, duration);
+		_move_along_route_tween.tween_property(self, "global_position", curr_point, duration);
 		
 		var direction:Vector2 = curr_point - self.global_position;
 		direction = direction.normalized();
@@ -153,11 +157,17 @@ func Move_Car_Along_Route(points:Array[Vector2]) -> void:
 		await _move_along_route_tween.finished;
 
 
+# Functions: Car Animation ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
 
+func _Play_Accident_Animation() -> void:
+	# Crash Animation
+	_tremor_tween.kill();
+	_Car_Crash();
 
 
 func _Car_Bounce() -> void:
+	
 	if _bounce_tween != null:
 		_bounce_tween.kill();
 	_bounce_tween = create_tween();
@@ -167,7 +177,25 @@ func _Car_Bounce() -> void:
 	_bounce_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale, .05);
 
 
+func _Car_Crash() -> void:
+	
+	# Since the Scene is going to be Reloaded,
+	# End all other animations.
+	if _tremor_tween != null:
+		_tremor_tween.kill();
+	if _driving_wobble_tween != null:
+		_driving_wobble_tween.kill();
+	
+	if _bounce_tween != null:
+		_bounce_tween.kill();
+	_bounce_tween = create_tween();
+	_bounce_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.2, .8), .05);
+	_bounce_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.8, 1.2), .1);
+	_bounce_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.1, .9), .2);
+
+
 func _Engine_Tremor() -> void:
+	
 	if _tremor_tween != null:
 		_tremor_tween.kill();
 	_tremor_tween = create_tween();
@@ -182,7 +210,6 @@ func _Wobble_Car_While_Driving() -> void:
 	
 	if _driving_wobble_tween != null:
 		_driving_wobble_tween.kill();
-		
 	_driving_wobble_tween = create_tween();
 	_driving_wobble_tween.tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(.95, 1.05), .1);
 	_driving_wobble_tween.chain().tween_property($AnimatedSprite2D, "scale", _car_sprite_scale * Vector2(1.05, .95), .1);
