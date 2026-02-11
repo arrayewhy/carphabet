@@ -6,6 +6,9 @@ var _mouse_move_thresh:float = 50;
 var _last_mouse_pos:Vector2;
 var _last_dir:Vector2 = Vector2.INF;
 
+var _lines:Array[Line2D];
+var _curr_line_idx:int;
+
 signal Path_Complete;
 
 
@@ -14,25 +17,50 @@ signal Path_Complete;
 
 func _ready() -> void:
 	set_process(false);
-	$"../Arrow_Head".hide();
+	$Arrow_Head.hide();
+	
+	_lines.push_back($Line2D);
 
 
 func _process(_delta: float) -> void:
 	
 	var curr_mouse_pos:Vector2 = get_global_mouse_position();
 	
+	if curr_mouse_pos.distance_to($"..".Get_End_Point()) <= 10:
+		_can_draw = false;
+		
+		set_process(false);
+		
+		Path_Complete.emit();
+		Tools.Disconnect_Callables(Path_Complete);
+		
+		$"..".Get_Curr_Car().Mouseover_Car.disconnect(_SIGNAL_Set_Can_Draw);
+		
+		return;
+	
 	if curr_mouse_pos.distance_to(_last_mouse_pos) > _mouse_move_thresh:
 		self.curve.add_point(curr_mouse_pos);
 		# Update Arrow Head Rotation
 		var direction = _last_mouse_pos.direction_to(curr_mouse_pos);
-		print(direction.dot(_last_dir))
+		
+		if direction.dot(_last_dir) <= 0.3:
+			#print('New Line')
+			var new_line:Line2D = _lines[_curr_line_idx].duplicate();
+			
+			new_line.clear_points();
+			#self.curve.clear_points();
+			
+			_lines.push_back(new_line);
+			self.add_child(new_line);
+			_curr_line_idx += 1;
+		
 		_last_dir = direction;
-		$"../Arrow_Head".rotation_degrees = rad_to_deg(direction.angle());
-		$"../Arrow_Head".global_position = curr_mouse_pos;
-		if !$"../Arrow_Head".visible:
-			$"../Arrow_Head".show();
+		$Arrow_Head.rotation_degrees = rad_to_deg(direction.angle());
+		$Arrow_Head.global_position = curr_mouse_pos;
+		if !$Arrow_Head.visible:
+			$Arrow_Head.show();
 		# Update Arrow Line
-		$"..".points = self.curve.get_baked_points();
+		_lines[_curr_line_idx].points = self.curve.get_baked_points();
 		_last_mouse_pos = curr_mouse_pos;
 		# Sound
 		AudioMaster.Play_Stone_Clack();
@@ -55,10 +83,16 @@ func _input(event: InputEvent) -> void:
 		
 		set_process(false);
 		
+		# If the Path is too Short,
+		# Reset it and wait to draw again.
+		if self.curve.point_count <= 5:
+			Reset();
+			return;
+		
 		Path_Complete.emit();
 		Tools.Disconnect_Callables(Path_Complete);
 		
-		$"../..".Get_Curr_Car().Mouseover_Car.disconnect(_SIGNAL_Set_Can_Draw);
+		$"..".Get_Curr_Car().Mouseover_Car.disconnect(_SIGNAL_Set_Can_Draw);
 
 
 # Functions: Signals ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -77,29 +111,16 @@ func _SIGNAL_Reset_Arrow() -> void:
 
 func Reset() -> void:
 	self.curve.clear_points();
-	$"..".clear_points();
-	$"../Arrow_Head".hide();
+	_lines[_curr_line_idx].clear_points();
+	$Arrow_Head.hide();
 
 
 func Connect_To_Car(car:Node2D) -> void:
 	car.Mouseover_Car.connect(_SIGNAL_Set_Can_Draw);
-	#car.Arrived.connect(_SIGNAL_Reset_Arrow);
 
 
-func Remove_Points_Around_Position(global_pos:Vector2) -> void:
-	
-	var arrow_line_points:Array[Vector2];
-	arrow_line_points.assign($"..".points);
-	
-	var first_close_point_found:bool;
-	
-	for point in arrow_line_points:
-		if point.distance_to(global_pos) <= 50:
-			arrow_line_points.erase(point);
-			if !first_close_point_found:
-				first_close_point_found = true;
-		else:
-			if first_close_point_found:
-				break;
-	
-	$"..".points = arrow_line_points;
+# Functions: Get Set ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+func Get_PathFollow() -> PathFollow2D:
+	return $PathFollow2D;
