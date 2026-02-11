@@ -26,17 +26,15 @@ func _process(_delta: float) -> void:
 	
 	var curr_mouse_pos:Vector2 = get_global_mouse_position();
 	
-	if curr_mouse_pos.distance_to($"..".Get_End_Point()) <= 10:
-		_can_draw = false;
-		
-		set_process(false);
-		
-		Path_Complete.emit();
-		Tools.Disconnect_Callables(Path_Complete);
-		
-		$"..".Get_Curr_Car().Mouseover_Car.disconnect(_SIGNAL_Set_Can_Draw);
-		
-		return;
+	# Automatically End path Drawing when Cursor is near End point
+	#if curr_mouse_pos.distance_to($"..".Get_End_Point()) <= 10:
+		#_can_draw = false;
+		#set_process(false);
+		#Path_Complete.emit();
+		## Disconnect Signals
+		#Tools.Disconnect_Callables(Path_Complete);
+		#$"..".Get_Curr_Car().Mouseover_Car.disconnect(_SIGNAL_Set_Can_Draw);
+		#return;
 	
 	if curr_mouse_pos.distance_to(_last_mouse_pos) > _mouse_move_thresh:
 		self.curve.add_point(curr_mouse_pos);
