@@ -1,19 +1,23 @@
 extends Node
 
-enum OBSTACLE_SOUND { NULL, Leaf_Rustle }
+enum SOUND_TYPE { NULL, Metal_Bang, Leaf_Rustle, Leaf_Impact }
 
 const _sounds:Dictionary[String, Array] = {
-	"Car_Engling_Idle" : [preload("res://Audio/SFX/car/car_engine_idle.wav")],
+	
+	"Car_Engine_Idle" : [preload("res://Audio/SFX/car/car_engine_idle.wav")],
 	"Car_Horn" : [preload("res://Audio/SFX/car/car_horn.wav")],
 	"Metal_Bang" : [preload("res://Audio/SFX/car/metal_impact.wav")],
 	"Tyre_Screech" : [
 		preload("res://Audio/SFX/car/tyre_screech_01.wav"), 
 		preload("res://Audio/SFX/car/tyre_screech_02.wav")],
+		
+	"Leaf_Impact" : [preload("res://Audio/SFX/leaf/leaf_impact.wav")],
 	"Leaf_Rustle" : [
 		preload("res://Audio/SFX/leaf/leaf_rustle_1.wav"),
 		preload("res://Audio/SFX/leaf/leaf_rustle_2.wav"),
 		preload("res://Audio/SFX/leaf/leaf_rustle_3.wav")
 		],
+		
 	"Stone_Clack" : [
 		preload("res://Audio/SFX/stones/stone_on_concrete_01.wav"),
 		preload("res://Audio/SFX/stones/stone_on_concrete_02.wav"),
@@ -53,7 +57,7 @@ func Play_Car_Horn() -> void:
 
 
 func Play_Car_Engine_Idle() -> void:
-	_Play_Sound(_sounds["Car_Engling_Idle"][0], false, .4);
+	_Play_Sound(_sounds["Car_Engine_Idle"][0], false, .4);
 
 
 func Play_Metal_Bang() -> void:
@@ -65,7 +69,11 @@ func Play_Tyre_Screech() -> void:
 
 
 func Play_Leaf_Rustle() -> void:
-	_Play_Sound(_sounds["Leaf_Rustle"][randi_range(0, _sounds["Leaf_Rustle"].size() - 1)], true, 2)
+	_Play_Sound(_sounds["Leaf_Rustle"][randi_range(0, _sounds["Leaf_Rustle"].size() - 1)], true, 2);
+
+
+func Play_Leaf_Impact() -> void:
+	_Play_Sound(_sounds["Leaf_Impact"][0], true, 1);
 
 
 func Play_Stone_Clack() -> void:
@@ -119,6 +127,18 @@ func Fade_All_Sounds_Out() -> void:
 		aud_player.stop();
 	
 	Silenced.emit();
+
+
+func Play_By_Sound_Type(type:SOUND_TYPE) -> void:
+	match type:
+		SOUND_TYPE.NULL:
+			pass;
+		SOUND_TYPE.Metal_Bang:
+			Play_Metal_Bang();
+		SOUND_TYPE.Leaf_Rustle:
+			Play_Leaf_Rustle();
+		SOUND_TYPE.Leaf_Impact:
+			Play_Leaf_Impact();
 
 
 # Functions: BGM ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
