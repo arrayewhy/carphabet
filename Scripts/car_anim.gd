@@ -2,12 +2,17 @@ extends AnimatedSprite2D
 
 var _turning:bool;
 
+#var _init_scale_x:float;
+
 
 func _ready() -> void:
 	set_process(false);
+	#_init_scale_x = self.scale.x;
 
 
 func Animate(direction:Vector2) -> void:
+	
+	#self.scale.x = _init_scale_x;
 	
 	# Up
 	if direction.y < 0:
@@ -19,14 +24,19 @@ func Animate(direction:Vector2) -> void:
 				play('North');
 			elif direction.x < -0.9:
 				play('West');
+				#play('East');
+				#self.scale.x = -_init_scale_x;
 				
 			elif direction.x < -0.4 && direction.x > -0.6:
 				play('North_West');
+				#play('North_East');
 			
 			elif direction.x > -0.5:
 				play('North_West_Upper');
+				#play('North_East_Upper');
 			elif direction.x < -0.5:
 				play('North_West_Lower');
+				#play('North_East_Lower');
 		
 		# Right
 		elif direction.x > 0:
@@ -57,6 +67,8 @@ func Animate(direction:Vector2) -> void:
 				play('South');
 			elif direction.x < -0.9:
 				play('West');
+				#play('East');
+				#self.scale.x = -_init_scale_x;
 			
 			elif direction.x < -0.4 && direction.x > -0.6:
 				play('South_West');
@@ -89,6 +101,8 @@ func Animate(direction:Vector2) -> void:
 		
 		if direction.x < 0:
 			play('West');
+			#play('East');
+			#self.scale.x = -_init_scale_x;
 			
 		elif direction.x > 0:
 			play('East');
