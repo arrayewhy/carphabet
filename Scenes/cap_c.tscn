@@ -39,7 +39,8 @@ _changes = Dictionary[int, Array]({
 position = Vector2(-156.79999, -5.0999756)
 polygon = PackedVector2Array(109.79999, -51.900024, 109.79999, 1138.1, 2107.8, 1139.1, 2101.8, 978.1, 1284.8, 983.1, 996.8, 985.1, 801.8, 951.1, 597.8, 896.1, 481.8, 802.1, 423.8, 651.1, 434.8, 467.09998, 502.8, 339.09998, 587.8, 232.09998, 719.8, 164.09998, 878.8, 106.099976, 1145.8, 98.099976, 2151.8, 101.099976, 2150.8, -52.900024)
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zones/CollisionPolygon2D"]
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Crash_Zones"]
+position = Vector2(-156.79999, -5.0999756)
 polygon = PackedVector2Array(2145.8, 334.09998, 1068.8, 329.09998, 841.8, 365.09998, 719.8, 441.09998, 680.8, 577.1, 738.8, 690.1, 865.8, 752.1, 1161.8, 763.1, 2169.8, 741.1)
 
 [node name="Camera2D" type="Camera2D" parent="."]

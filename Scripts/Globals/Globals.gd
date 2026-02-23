@@ -1,12 +1,13 @@
 extends Node
 
-enum SceneType { Null, A, B, C }
+enum SceneType { Null, A, B, C, D }
 var CURRENT_SCENE_TYPE:SceneType;
 
 const Scenes:Dictionary[SceneType, String] = {
 	SceneType.A : "res://Scenes/cap_a.tscn",
 	SceneType.B : "res://Scenes/cap_b.tscn",
 	SceneType.C : "res://Scenes/cap_c.tscn",
+	SceneType.D : "res://Scenes/cap_d.tscn",
 }
 
 

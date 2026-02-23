@@ -1,0 +1,90 @@
+[gd_scene load_steps=8 format=3 uid="uid://4q51wuqhhjw6"]
+
+[ext_resource type="Script" uid="uid://bo7dai4h7f30p" path="res://Scripts/base.gd" id="1_s37hh"]
+[ext_resource type="Script" uid="uid://b87bvmpwsmd84" path="res://Scripts/crash_zones.gd" id="2_0gcgc"]
+[ext_resource type="Script" uid="uid://cl3m1rn1mllfl" path="res://Scripts/route.gd" id="3_etk6a"]
+[ext_resource type="Texture2D" uid="uid://doaaej05vu0uf" path="res://Sprites/maps/d_cap/map_d_cap.png" id="4_wvx3e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kspgy"]
+size = Vector2(721.92505, 1319.61)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_2suvu"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_r4bvq"]
+
+[node name="Base" type="Node2D"]
+script = ExtResource("1_s37hh")
+_curr_scene = 4
+
+[node name="BG_Colour" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="BG_Colour"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.78039217, 0.78039217, 0.78039217, 1)
+
+[node name="Crash_Zones" type="Area2D" parent="."]
+top_level = true
+script = ExtResource("2_0gcgc")
+_changes = Dictionary[int, Array]({
+0: [NodePath("")]
+})
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Crash_Zones"]
+position = Vector2(316.9625, 559)
+shape = SubResource("RectangleShape2D_kspgy")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Crash_Zones"]
+polygon = PackedVector2Array(650, 209, 1016, 206, 1268, 233, 1498, 310, 1568, 460, 1579, 624, 1499, 735, 1368, 819, 1134, 846, 820, 861, 649, 860, 649, 1114, 1935, 1114, 1958, -31, 644, -17)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Crash_Zones"]
+polygon = PackedVector2Array(903, 404, 1171, 400, 1307, 459, 1341, 532, 1303, 607, 1143, 644, 897, 640)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(902, 540)
+zoom = Vector2(0.9, 0.9)
+
+[node name="Start_Routes" type="Node2D" parent="."]
+visible = false
+
+[node name="Route" type="Node2D" parent="Start_Routes"]
+script = ExtResource("3_etk6a")
+
+[node name="Point0" type="Sprite2D" parent="Start_Routes/Route"]
+position = Vector2(2218, 216)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_2suvu")
+
+[node name="Point1" type="Sprite2D" parent="Start_Routes/Route"]
+position = Vector2(1269, 216)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_2suvu")
+
+[node name="End_Routes" type="Node2D" parent="."]
+visible = false
+
+[node name="Route" type="Node2D" parent="End_Routes"]
+script = ExtResource("3_etk6a")
+
+[node name="Point0" type="Sprite2D" parent="End_Routes/Route"]
+position = Vector2(1224, 863)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Point1" type="Sprite2D" parent="End_Routes/Route"]
+position = Vector2(2162, 863)
+scale = Vector2(32, 32)
+texture = SubResource("PlaceholderTexture2D_r4bvq")
+
+[node name="Environment" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(962, 534)
+texture = ExtResource("4_wvx3e")
